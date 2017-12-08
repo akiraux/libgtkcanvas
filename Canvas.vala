@@ -4,21 +4,21 @@ public class Canvas : GtkClutter.Embed {
 
     construct {
         var actor = get_stage ();
-        actor.background_color = Clutter.Color.from_string("white");
+        actor.background_color = Clutter.Color.from_string ("white");
 
         set_use_layout_size (true);
     }
 
     public void add_test_shape (string color) {
         var item = new CanvasItem ();
-        item.background_color = Clutter.Color.from_string(color);
+        item.background_color = Clutter.Color.from_string (color);
 
         item.rotation_angle_z = 50.0;
 
         var rotate = new Clutter.RotateAction ();
         rotate.rotate (item, 45.0);
 
-        get_stage ().add (item);
+        get_stage ().add_child (item);
     }
 }
 
@@ -28,15 +28,8 @@ public class CanvasItem : Clutter.Actor {
     private bool dragging = false;
     private bool clicked = false;
 
-    private int initial_x = 0;
-    private int initial_y = 0;
-
     private int x_offset_press = 0;
     private int y_offset_press = 0;
-
-
-    private float begin_resize_width = 0.0f;
-    private float begin_resize_height = 0.0f;
 
     construct {
         reactive = true;
@@ -44,7 +37,6 @@ public class CanvasItem : Clutter.Actor {
         y = 0;
         width = 200;
         height = 200;
-        background_color = Clutter.Color.from_string("black");
 
         move_action = new MoveAction ();
         move_action.drag_begin.connect (() => on_move_begin ());
@@ -55,12 +47,7 @@ public class CanvasItem : Clutter.Actor {
     }
 
     private void on_move_begin () {
-        print ("Click\n");
-        var manager = Gdk.Display.get_default ().get_device_manager ();
-        var pointer = manager.get_client_pointer ();
-
         float px, py;
-
         move_action.get_press_coords (out px, out py);
 
         x_offset_press = (int)(px - x);
