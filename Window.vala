@@ -5,6 +5,8 @@ int main (string argv[]) {
     Gtk.init (ref argv);
 
     var window = new Gtk.Window ();
+    window.title = "libGtkCanvas Demo";
+
     var canvas = new Canvas ();
     canvas.add_test_shape ("blue");
     canvas.add_test_shape ("red");

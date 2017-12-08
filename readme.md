@@ -10,8 +10,12 @@ It is meant to contain the basic elements such as a basic container class, move,
 - gtk+-3.0
 - clutter-gtk-1.0
 
-### To compile & run
+### To compile & run the demo
 
 ```
 make all run
 ```
+
+<p align="center">
+    <img src="Screenshot.png" alt="Screenshot">
+</p>
