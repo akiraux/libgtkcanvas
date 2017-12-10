@@ -10,6 +10,8 @@ run:
 docs:
 	rm -rf gtkcanvas || true
 	valadoc $(DEPS) $(FILES) -o gtkcanvas
+view-docs:
+	xdg-open ./gtkcanvas/index.html
 clean:
 	rm canvas || true
 	rm -rf gtkcanvas || true
