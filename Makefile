@@ -12,10 +12,10 @@ build:
 run:
 	./demo
 docs:
-	rm -rf gtkcanvas || true
+	rm -rf gtkcanvas
 	valadoc $(DEPS) $(FILES) -o gtkcanvas
 view-docs:
 	xdg-open ./gtkcanvas/index.html
 clean:
-	rm demo || true
-	rm -rf gtkcanvas || true
+	rm -f demo
+	rm -rf gtkcanvas
