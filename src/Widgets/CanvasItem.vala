@@ -38,13 +38,49 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public bool clicked { get; internal set; default = false; }
 
+    public int real_x { get; private set; }
+    public int real_y { get; private set; }
+    public int real_w { get; private set; }
+    public int real_h { get; private set; }
+
+    internal double ratio;
+
     construct {
         reactive = true;
-        x = 200;
-        y = 0;
-        width = 200;
-        height = 200;
 
+        set_rectangle (200, 0, 200, 200);
         move_action = new MoveAction (this);
+    }
+
+    /**
+    * Set's the coordenates and size of this, ignoring nulls. This is where the "real_n" should be set.
+    */
+    public void set_rectangle (int? x, int? y, int? w, int? h) {
+        if (x != null) {
+            real_x = x;
+        }
+
+        if (y != null) {
+            real_y = y;
+        }
+
+        if (w != null) {
+            real_w = w;
+        }
+
+        if (h != null) {
+            real_h = w;
+        }
+
+        apply_ratio (ratio);
+    }
+
+    internal void apply_ratio (double ratio) {
+        this.ratio = ratio;
+
+        width = (int)(real_w * ratio);
+        height = (int)(real_h * ratio);
+        x = (int)(real_x * ratio);
+        y = (int)(real_y * ratio);
     }
 }

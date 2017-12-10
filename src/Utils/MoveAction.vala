@@ -56,8 +56,9 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
         float motion_x, motion_y;
         get_motion_coords (out motion_x, out motion_y);
 
-        item.x = (int)motion_x - x_offset_press;
-        item.y = (int)motion_y - y_offset_press;
+        var x = (int) ((motion_x - x_offset_press) / item.ratio);
+        var y = (int) ((motion_y - y_offset_press) / item.ratio);
+        item.set_rectangle (x, y, null, null);
 
         if (!item.dragging) {
             item.dragging = true;
