@@ -20,15 +20,17 @@
 */
 
 /**
- * This is a {@link GtkClutter.Embed} object that holds and renders {@link GtkCanvas.CanvasItem} and their subclasses
+ * This is a widget that holds and renders {@link GtkCanvas.CanvasItem} and their subclasses
  *
  * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's CanvasItems when the canvas is resized.
  */
-public class GtkCanvas.Canvas : GtkClutter.Embed {
+public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private List<CanvasItem> items;
 
     private int current_allocated_width;
     private double current_ratio;
+
+    private GtkClutter.Embed stage;
 
     /**
     * This value controls the zoom level the items will use.
@@ -46,21 +48,42 @@ public class GtkCanvas.Canvas : GtkClutter.Embed {
             }
         }
     }
-    private double _zoom_level = 0.5;
+    private double _zoom_level = 1.0;
 
-    public int width { get; set; }
-    public int height { get; set; }
+    public int width {
+        get {
+            return _width;
+        } set {
+            _width = value;
+            ratio = width / height;
+        }
+    }
+    private int _width = 100;
+
+    public int height {
+        get {
+            return _height;
+        } set {
+            _height = value;
+            ratio = width / height;
+        }
+    }
+    private int _height = 100;
 
     public Canvas (int width, int height) {
-        Object (width: width, height: height);
+        Object (width: width, height: height, obey_child: false);
     }
 
     construct {
-        var actor = get_stage ();
+        stage = new GtkClutter.Embed ();
+        stage.set_use_layout_size (false);
+
+        var actor = stage.get_stage ();
         actor.background_color = Clutter.Color.from_string ("white");
-        set_use_layout_size (false);
 
         items = new List<CanvasItem>();
+
+        add (stage);
     }
 
    /**
@@ -86,12 +109,12 @@ public class GtkCanvas.Canvas : GtkClutter.Embed {
     */
     public void add_item (CanvasItem item) {
         items.prepend (item);
-        get_stage ().add_child (item);
+        stage.get_stage ().add_child (item);
     }
 
     // TODO: Keep canvas on the same aspect ratio (like 16:9). Maybe use a Gtk.AspectFrame?
     private void update_current_ratio () {
-        current_allocated_width = get_allocated_width ();
+        current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;
 
         current_ratio = ((double)(current_allocated_width) / width) * zoom_level;
@@ -102,7 +125,7 @@ public class GtkCanvas.Canvas : GtkClutter.Embed {
     }
 
     public override bool draw (Cairo.Context cr) {
-        if (current_allocated_width != get_allocated_width ()) {
+        if (current_allocated_width != stage.get_allocated_width ()) {
             update_current_ratio ();
         }
 
