@@ -32,19 +32,28 @@ public class GtkCanvas.Canvas : GtkClutter.Embed {
 
     /**
     * This value controls the zoom level the items will use.
-    * A larger value means that the item will be smaller (As if looked from further away)
+    * A value of 0.5 will make items half as big, while a value of 2.0 make them twice as large
     *
-    * Defaults to 500.0.
+    * Defaults to 1.0, and must be larger than 0
     */
     public double zoom_level {
         get {
             return _zoom_level;
         } set {
-            _zoom_level = value;
-            update_current_ratio ();
+            if (value > 0) {
+                _zoom_level = value;
+                update_current_ratio ();
+            }
         }
     }
-    private double _zoom_level = 500.0;
+    private double _zoom_level = 0.5;
+
+    public int width { get; set; }
+    public int height { get; set; }
+
+    public Canvas (int width, int height) {
+        Object (width: width, height: height);
+    }
 
     construct {
         var actor = get_stage ();
@@ -85,7 +94,7 @@ public class GtkCanvas.Canvas : GtkClutter.Embed {
         current_allocated_width = get_allocated_width ();
         if (current_allocated_width < 0) return;
 
-        current_ratio = (double)(current_allocated_width - 24) / zoom_level;
+        current_ratio = ((double)(current_allocated_width) / width) * zoom_level;
 
         foreach (var item in items) {
             item.apply_ratio (current_ratio);

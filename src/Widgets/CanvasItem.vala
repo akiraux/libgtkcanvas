@@ -48,7 +48,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     construct {
         reactive = true;
 
-        set_rectangle (200, 0, 200, 200);
+        set_rectangle (0, 0, 100, 100);
         move_action = new MoveAction (this);
     }
 
