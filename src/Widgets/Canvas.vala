@@ -28,7 +28,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private List<CanvasItem> items;
 
     private int current_allocated_width;
-    private double current_ratio;
+    private double current_ratio = 1.0;
 
     private GtkClutter.Embed stage;
 
@@ -36,30 +36,42 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     * This value controls the zoom level the items will use.
     * A value of 0.5 will make items half as big, while a value of 2.0 make them twice as large
     *
-    * Defaults to 1.0, and must be larger than 0
+    * Defaults to 1.0, and must be larger than 0. Currently does not do anything until scrolling gets implemented
     */
     public double zoom_level {
         get {
             return _zoom_level;
         } set {
-            if (value > 0) {
-                _zoom_level = value;
-                update_current_ratio ();
-            }
+            if (value < 1) return;
+
+            //_zoom_level = value;
+            update_current_ratio ();
         }
     }
     private double _zoom_level = 1.0;
 
+   /**
+    * The "virtual" width of the canvas. This is the size in pixels that the canvas will represent.
+    *
+    * Defaults to 100, and must be larger than 0
+    */
     public int width {
         get {
             return _width;
         } set {
+            if (value < 1) return;
+
             _width = value;
             ratio = width / height;
         }
     }
     private int _width = 100;
 
+    /**
+    * The "virtual" height of the canvas. This is the size in pixels that the canvas will represent.
+    *
+    * Defaults to 100, and must be larger than 0
+    */
     public int height {
         get {
             return _height;
@@ -70,6 +82,12 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     }
     private int _height = 100;
 
+    /**
+    * Creates a new {@link GtkCanvas.Canvas}.
+    *
+    * @param width the width in px the canvas will represent
+    * @param height the height in px the canvas will represent
+    */
     public Canvas (int width, int height) {
         Object (width: width, height: height, obey_child: false);
     }
@@ -110,9 +128,9 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     public void add_item (CanvasItem item) {
         items.prepend (item);
         stage.get_stage ().add_child (item);
+        item.apply_ratio (current_ratio);
     }
 
-    // TODO: Keep canvas on the same aspect ratio (like 16:9). Maybe use a Gtk.AspectFrame?
     private void update_current_ratio () {
         current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;
@@ -124,6 +142,9 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         }
     }
 
+    /**
+    * For internal usage
+    */
     public override bool draw (Cairo.Context cr) {
         if (current_allocated_width != stage.get_allocated_width ()) {
             update_current_ratio ();
