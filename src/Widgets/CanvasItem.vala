@@ -78,9 +78,9 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     internal void apply_ratio (double ratio) {
         this.ratio = ratio;
 
-        width = (int)(real_w * ratio);
-        height = (int)(real_h * ratio);
-        x = (int)(real_x * ratio);
-        y = (int)(real_y * ratio);
+        width = (int) Math.round (real_w  * ratio);
+        height = (int) Math.round (real_h * ratio);
+        x = (int) Math.round (real_x * ratio);
+        y = (int) Math.round (real_y * ratio);
     }
 }

@@ -62,7 +62,8 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
             if (value < 1) return;
 
             _width = value;
-            ratio = width / height;
+            ratio = (float) width / height;
+            update_current_ratio ();
         }
     }
     private int _width = 100;
@@ -76,8 +77,11 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         get {
             return _height;
         } set {
+            if (value < 1) return;
+
             _height = value;
-            ratio = width / height;
+            ratio = (float) width / height;
+            update_current_ratio ();
         }
     }
     private int _height = 100;
@@ -97,7 +101,6 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         stage.set_use_layout_size (false);
 
         var actor = stage.get_stage ();
-        actor.background_color = Clutter.Color.from_string ("white");
 
         items = new List<CanvasItem>();
 

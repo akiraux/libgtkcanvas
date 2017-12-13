@@ -8,7 +8,7 @@ FILES = \
 all: clean build docs run
 
 build:
-	valac $(DEPS) $(FILES) -o demo
+	valac -X -lm $(DEPS) $(FILES) -o demo
 run:
 	./demo
 docs:
