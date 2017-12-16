@@ -4,6 +4,7 @@ FILES = \
 	src/Widgets/Canvas.vala\
 	src/Widgets/CanvasItem.vala\
 	src/Utils/MoveAction.vala\
+	src/Utils/HoverAction.vala\
 
 all: clean build docs run
 

@@ -25,9 +25,9 @@ int main (string argv[]) {
     var window = new Gtk.Window ();
     window.title = "GtkCanvas Demo";
 
-    window.resize (500, 400);
+    window.resize (1000, 800);
 
-    var canvas = new GtkCanvas.Canvas (200, 100);
+    var canvas = new GtkCanvas.Canvas (600, 400);
     canvas.add_test_shape ("blue", 45.0);
     canvas.add_test_shape ("red", 30.0);
     canvas.add_test_shape ("green", 0.0);
