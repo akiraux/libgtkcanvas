@@ -27,6 +27,7 @@
  */
 public class GtkCanvas.CanvasItem : Clutter.Actor {
     private MoveAction move_action;
+    private HoverAction hover_action;
 
     /**
      * True if this is currently being dragged
@@ -50,6 +51,15 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
 
         set_rectangle (0, 0, 100, 100);
         move_action = new MoveAction (this);
+        hover_action = new HoverAction (this);
+
+        enter_event.connect (() => {
+            hover_action.toggle (true);
+        });
+
+        leave_event.connect (() => {
+            hover_action.toggle (false);
+        });
     }
 
     /**
@@ -82,5 +92,8 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         height = (int) Math.round (real_h * ratio);
         x = (int) Math.round (real_x * ratio);
         y = (int) Math.round (real_y * ratio);
+
+        // Set the bounding box size to parent's size
+        hover_action.set_size (width, height);
     }
 }
