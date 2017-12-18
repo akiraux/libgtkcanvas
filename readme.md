@@ -12,9 +12,18 @@ It is meant to contain the basic elements such as a basic container class, move,
 
 ### To compile & run the demo
 
-```
-make all run
-```
+#### Meson Build
+
+### Library, GObject Introspection, demo and documentation are build after this
+
+mkdir _build
+cd _build
+meson ..
+ninja
+
+#### Run demo
+
+./demo/gtkcanvas-demo
 
 <p align="center">
     <img src="Screenshot.png" alt="Screenshot">
