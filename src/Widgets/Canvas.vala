@@ -25,6 +25,14 @@
  * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's CanvasItems when the canvas is resized.
  */
 public class GtkCanvas.Canvas : Gtk.AspectFrame {
+    /**
+     * Signal triggered when a {@link GtkCanvas.CanvasItem} on this canvas is selected by the user.
+     *
+     * @param item The canvas item which triggered the event.
+     * @param modifiers A mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked.
+     */
+    public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
+
     private List<CanvasItem> items;
 
     private int current_allocated_width;
@@ -132,6 +140,10 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         items.prepend (item);
         stage.get_stage ().add_child (item);
         item.apply_ratio (current_ratio);
+
+        item.selected.connect ((modifiers) => {
+            item_selected (item, modifiers);
+        });
     }
 
     private void update_current_ratio () {

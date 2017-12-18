@@ -26,6 +26,13 @@
  * and leave more specific implementations to child classes.
  */
 public class GtkCanvas.CanvasItem : Clutter.Actor {
+    /**
+     * Signal triggered when this is selected by the user.
+     *
+     * @param modifiers this is a mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked
+     */
+    public signal void selected (Clutter.ModifierType modifiers);
+
     private MoveAction move_action;
     private HoverAction hover_action;
 
