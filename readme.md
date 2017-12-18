@@ -16,10 +16,10 @@ It is meant to contain the basic elements such as a basic container class, move,
 
 This builds the Library, GObject Introspection, demo and documentation are build after this
 
-<p>mkdir _build</p>
-<p>cd _build</p>
-<p>meson ..</p>
-<p>ninja</p>
+<p>$ mkdir _build</p>
+<p>$ cd _build</p>
+<p>$ meson ..</p>
+<p>$ ninja</p>
 
 #### Run demo
 
