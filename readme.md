@@ -17,15 +17,23 @@ It is meant to contain the basic elements such as a basic container class, move,
 This builds the Library, GObject Introspection, demo and documentation are build after this
 
 ```
-mkdir _build
-cd _build
+mkdir build
+cd build
 meson ..
 ninja
 ```
 
 #### Run demo
 
+```
 ./demo/gtkcanvas-demo
+```
+
+#### View Docs
+
+```
+xdg-open docs/GtkCanvas-0.4/GtkCanvas.html
+```
 
 <p align="center">
     <img src="demo/Screenshot.png" alt="Screenshot">
