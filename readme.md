@@ -14,7 +14,7 @@ It is meant to contain the basic elements such as a basic container class, move,
 
 #### Meson Build
 
-### Library, GObject Introspection, demo and documentation are build after this
+This builds the Library, GObject Introspection, demo and documentation are build after this
 
 mkdir _build
 cd _build
@@ -26,5 +26,5 @@ ninja
 ./demo/gtkcanvas-demo
 
 <p align="center">
-    <img src="Screenshot.png" alt="Screenshot">
+    <img src="demo/Screenshot.png" alt="Screenshot">
 </p>
