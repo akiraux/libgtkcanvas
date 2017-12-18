@@ -37,7 +37,7 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
         item.add_action (this);
     }
 
-    private void on_move_begin () {
+    private void on_move_begin (Clutter.Actor actor, float event_x, float event_y, Clutter.ModifierType modifiers) {
         float px, py;
         get_press_coords (out px, out py);
 
@@ -46,6 +46,8 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
 
         item.clicked = true;
         item.dragging = false;
+
+        item.selected (modifiers);
     }
 
     protected override bool drag_progress (Clutter.Actor actor, float delta_x, float delta_y) {
