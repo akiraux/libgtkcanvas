@@ -10,8 +10,8 @@ VERSIONED_CAMEL_CASE_NAME = CAMEL_CASE_NAME +'-'+ API_VERSION
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required: true)
 
-deps = ([dependency('gtk+-3.0', version:'>=3.22.11'),
-        dependency('clutter-gtk-1.0', version:'>=1.8.2'),
+deps = ([dependency('gtk+-3.0', version:'>=3.18'),
+        dependency('clutter-gtk-1.0', version:'>=1.6'),
         m_dep
 ])
 
