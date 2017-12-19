@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2017
+* Copyright (C) 2017
 *
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
+* This program or library is free software; you can redistribute it
+* and/or modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
+* version 3 of the License, or (at your option) any later version.
 *
-* This program is distributed in the hope that it will be useful,
+* This library is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
 *
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
+* You should have received a copy of the GNU Lesser General
+* Public License along with this library; if not, write to the
 * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
+* Boston, MA 02110-1301 USA.
 *
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
@@ -37,7 +37,7 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
         item.add_action (this);
     }
 
-    private void on_move_begin () {
+    private void on_move_begin (Clutter.Actor actor, float event_x, float event_y, Clutter.ModifierType modifiers) {
         float px, py;
         get_press_coords (out px, out py);
 
@@ -46,6 +46,8 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
 
         item.clicked = true;
         item.dragging = false;
+
+        item.selected (modifiers);
     }
 
     protected override bool drag_progress (Clutter.Actor actor, float delta_x, float delta_y) {

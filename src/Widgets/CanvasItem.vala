@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2017
+* Copyright (C) 2017
 *
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
+* This program or library is free software; you can redistribute it
+* and/or modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
+* version 3 of the License, or (at your option) any later version.
 *
-* This program is distributed in the hope that it will be useful,
+* This library is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
 *
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
+* You should have received a copy of the GNU Lesser General
+* Public License along with this library; if not, write to the
 * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
+* Boston, MA 02110-1301 USA.
 *
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
@@ -26,6 +26,13 @@
  * and leave more specific implementations to child classes.
  */
 public class GtkCanvas.CanvasItem : Clutter.Actor {
+    /**
+     * Signal triggered when this is selected by the user.
+     *
+     * @param modifiers this is a mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked
+     */
+    public signal void selected (Clutter.ModifierType modifiers);
+
     private MoveAction move_action;
     private HoverAction hover_action;
 
@@ -79,7 +86,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         }
 
         if (h != null) {
-            real_h = w;
+            real_h = h;
         }
 
         apply_ratio (ratio);
@@ -92,8 +99,5 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         height = (int) Math.round (real_h * ratio);
         x = (int) Math.round (real_x * ratio);
         y = (int) Math.round (real_y * ratio);
-
-        // Set the bounding box size to parent's size
-        hover_action.set_size (width, height);
     }
 }

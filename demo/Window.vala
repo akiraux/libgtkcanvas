@@ -51,9 +51,28 @@ int main (string argv[]) {
     testing_grid.orientation = Gtk.Orientation.VERTICAL;
     testing_grid.row_spacing = 6;
 
+    var new_shape = new Gtk.Button.with_label ("Add Shape");
+    new_shape.clicked.connect (() => {
+        var actor = canvas.add_test_shape ("rgb(255, 198, 153)", 0.0);
+        actor.set_rectangle (null, null, 200, 150);
+
+        // Example on how you can add an animation
+        actor.set_pivot_point (0.5f, 0.5f);
+        actor.set_scale (0.01f, 0.01f);
+        actor.opacity = 0;
+
+        actor.save_easing_state ();
+        actor.set_easing_mode (Clutter.AnimationMode.EASE_OUT_EXPO);
+        actor.set_easing_duration (200);
+        actor.set_scale (1.0f, 1.0f);
+        actor.opacity = 255U;
+        actor.restore_easing_state ();
+    });
+
     testing_grid.add (canvas_label);
     testing_grid.add (width);
     testing_grid.add (height);
+    testing_grid.add (new_shape);
 
     var main_grid = new Gtk.Grid ();
     main_grid.margin = 6;
