@@ -12,10 +12,29 @@ It is meant to contain the basic elements such as a basic container class, move,
 
 ### To compile & run the demo
 
+#### Meson Build
+
+This builds the Library, GObject Introspection, demo and documentation are build after this
+
 ```
-make all run
+mkdir build
+cd build
+meson ..
+ninja
+```
+
+#### Run demo
+
+```
+./demo/gtkcanvas-demo
+```
+
+#### View Docs
+
+```
+xdg-open docs/GtkCanvas-0.4/GtkCanvas.html
 ```
 
 <p align="center">
-    <img src="Screenshot.png" alt="Screenshot">
+    <img src="demo/Screenshot.png" alt="Screenshot">
 </p>

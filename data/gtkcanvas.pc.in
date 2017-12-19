@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+datadir=@prefix@/share
+includedir=@prefix@/include
+
+Name: @PROJECT_NAME@
+Description: Canvas based on Clutter and Gtk+ 3.0
+URL: https://github.com/Philip-Scott/libgtkcanvas
+Version: @VERSION@
+Requires: gtk+3.0 >= 3.22.11 clutter-1.0 >= 1.26.0
+Libs: -L${libdir} -lgtkcanvas-@API_VERSION@
+Cflags: -I${includedir}/gtkcanvas-@API_VERSION@

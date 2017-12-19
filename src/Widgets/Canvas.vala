@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2017
+* Copyright (C) 2017
 *
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
+* This program or library is free software; you can redistribute it
+* and/or modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
+* version 3 of the License, or (at your option) any later version.
 *
-* This program is distributed in the hope that it will be useful,
+* This library is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
 *
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
+* You should have received a copy of the GNU Lesser General
+* Public License along with this library; if not, write to the
 * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
+* Boston, MA 02110-1301 USA.
 *
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
@@ -25,6 +25,14 @@
  * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's CanvasItems when the canvas is resized.
  */
 public class GtkCanvas.Canvas : Gtk.AspectFrame {
+    /**
+     * Signal triggered when a {@link GtkCanvas.CanvasItem} on this canvas is selected by the user.
+     *
+     * @param item The canvas item which triggered the event.
+     * @param modifiers A mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked.
+     */
+    public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
+
     private List<CanvasItem> items;
 
     private int current_allocated_width;
@@ -132,6 +140,10 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         items.prepend (item);
         stage.get_stage ().add_child (item);
         item.apply_ratio (current_ratio);
+
+        item.selected.connect ((modifiers) => {
+            item_selected (item, modifiers);
+        });
     }
 
     private void update_current_ratio () {
