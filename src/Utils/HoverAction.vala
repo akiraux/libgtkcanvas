@@ -23,26 +23,32 @@
  * Show/Hide the bounding box for the item selection
  * Clutter.Rectangle is deprecated, needs to be converted in an element that can handle border color
  */
-internal class GtkCanvas.HoverAction : Clutter.Rectangle {
-    public bool toggled { get { return visible; } set { visible = value; } }
-    
+internal class GtkCanvas.HoverAction : Object  {
+    public bool toggled {
+        get {
+            return visible;
+        } set {
+            if (value && effect == null) {
+                effect = new HoverEffect (1, 10);
+                item.add_effect (effect);
+            } else if (!value && effect != null) {
+                item.remove_effect (effect);
+                effect = null;
+            }
+
+            visible = value;
+        }
+    }
+
+    bool visible = false;
     private unowned CanvasItem item;
+    HoverEffect? effect;
 
     public HoverAction (CanvasItem item) {
         this.item = item;
-        color = Clutter.Color.from_string ("transparent");
-		has_border = true;
-        border_width = 1;
-        border_color = Clutter.Color.from_string ("#0082ffff");
-        visible = false;
-
-        item.add_child (this);
     }
 
     public void toggle (bool toggle) {
         toggled = toggle;
-        // change window cursor
-        // new Gtk.Cursor.from_name ("move");
-        // new Gtk.Cursor.from_name ("default");
     }
 }

@@ -18,6 +18,7 @@ if valadoc.found()
 				pkgname,
 				pkgversion,
 				'--pkg=gtk+-3.0',
+				'--pkg=granite',
 				'--pkg=clutter-1.0',
 				'--pkg=clutter-gtk-1.0',
 				'--directory=@OUTDIR@',

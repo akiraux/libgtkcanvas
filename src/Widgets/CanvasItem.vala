@@ -86,7 +86,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         }
 
         if (h != null) {
-            real_h = w;
+            real_h = h;
         }
 
         apply_ratio (ratio);
@@ -99,8 +99,5 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         height = (int) Math.round (real_h * ratio);
         x = (int) Math.round (real_x * ratio);
         y = (int) Math.round (real_y * ratio);
-
-        // Set the bounding box size to parent's size
-        hover_action.set_size (width, height);
     }
 }

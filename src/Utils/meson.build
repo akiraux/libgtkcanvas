@@ -1,3 +1,5 @@
 files_utils = files([
-        'MoveAction.vala'
+        'MoveAction.vala',
+        'HoverAction.vala',
+        'HoverEffect.vala'
 ])
