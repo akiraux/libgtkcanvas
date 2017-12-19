@@ -12,6 +12,7 @@ m_dep = cc.find_library('m', required: true)
 
 deps = ([dependency('gtk+-3.0', version:'>=3.18'),
         dependency('clutter-gtk-1.0', version:'>=1.6'),
+        dependency('granite', version:'>=0.3'),
         m_dep
 ])
 

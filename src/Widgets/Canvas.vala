@@ -121,7 +121,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     * @param color the color the test-shape will be, in CSS format
     * @param rotation the amount of degrees the item will be rotated
     */
-    public void add_test_shape (string color, double rotation) {
+    public CanvasItem add_test_shape (string color, double rotation) {
         var item = new CanvasItem ();
         item.background_color = Clutter.Color.from_string (color);
 
@@ -129,6 +129,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         rotate.rotate (item, rotation);
 
         add_item (item);
+        return item;
     }
 
     /**

@@ -6,17 +6,14 @@ FILES = \
 	src/Utils/MoveAction.vala\
 	src/Utils/HoverAction.vala\
 
-all: clean build docs run
+all: clean build docs
 
 build:
-	valac -X -lm $(DEPS) $(FILES) -o demo
-run:
-	./demo
+	valac -X -lm $(DEPS) $(FILES) -o canvasdemo
 docs:
 	rm -rf gtkcanvas
 	valadoc $(DEPS) $(FILES) -o gtkcanvas
 view-docs:
 	xdg-open ./gtkcanvas/index.html
 clean:
-	rm -f demo
 	rm -rf gtkcanvas
