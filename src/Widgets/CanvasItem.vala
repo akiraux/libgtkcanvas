@@ -51,12 +51,21 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     public int real_w { get; private set; }
     public int real_h { get; private set; }
 
-    internal double ratio;
+    internal double ratio = 1.0;
+
+    public CanvasItem.with_values (int x, int y, int w, int h, string color) {
+        Object (background_color: Clutter.Color.from_string (color));
+        set_rectangle (x, y, w, h);
+    }
+
+    public CanvasItem () {
+        set_rectangle (0, 0, 100, 100);
+    }
 
     construct {
         reactive = true;
+        set_pivot_point (0.5f, 0.5f);
 
-        set_rectangle (0, 0, 100, 100);
         move_action = new MoveAction (this);
         hover_action = new HoverAction (this);
 

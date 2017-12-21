@@ -39,6 +39,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private double current_ratio = 1.0;
 
     private GtkClutter.Embed stage;
+    private Resizer resizer;
 
     /**
     * This value controls the zoom level the items will use.
@@ -112,6 +113,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         items = new List<CanvasItem>();
 
+        resizer = new Resizer (actor);
         add (stage);
     }
 
@@ -144,6 +146,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         item.selected.connect ((modifiers) => {
             item_selected (item, modifiers);
+            resizer.select_item (item);
         });
     }
 
