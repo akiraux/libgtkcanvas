@@ -140,7 +140,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     */
     public CanvasItem add_circle_shape (string color) {
         var item = new CanvasItem ("circle");
-        item.background_color = Clutter.Color.from_string (color);
+        //  item.background_color = Clutter.Color.from_string (color);
 
         add_item (item);
         return item;

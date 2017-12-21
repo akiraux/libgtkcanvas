@@ -90,28 +90,29 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     }
 
     public void set_circle (int? x, int? y, int? w, int? h) {
-        double angle1 = 45.0  * (Math.PI/180.0); // angles are specified
-        double angle2 = 1800.0 * (Math.PI/180.0); // in radians
+        double angle1 = 0.0  * (Math.PI/180.0); // angles are specified
+        double angle2 = 360.0 * (Math.PI/180.0); // in radians
 
         var _canvas = new Clutter.Canvas ();
         _canvas.set_size( w, h );
         set_size ( w, h );
 
+        set_rectangle (null, null, w, h );
+        set_content ( _canvas );
+
         _canvas.draw.connect((ctx, w, h) => {
-            ctx.set_line_width(10.0);
+            ctx.set_line_width(1.0);
             ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
-            ctx.arc (128.0, 128.0, 100.0, angle1, angle2);
+            ctx.arc (w/2+1, h/2+1, w/2-2, angle1, angle2);
             ctx.stroke ();
 
-            warning ("making circle");
-            
             return true;
         });
 
         set_content ( _canvas );
         _canvas.invalidate (); // forces the redraw
 
-        //  apply_ratio (ratio);
+        apply_ratio (ratio);
     }
 
     /**
