@@ -96,23 +96,23 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         var _canvas = new Clutter.Canvas ();
         _canvas.set_size( w, h );
 
-        set_size ( w, h );
+        set_rectangle (null, null, w, h );
         set_content ( _canvas );
 
         _canvas.draw.connect((ctx, width, height) => {
             ctx.set_line_width(10.0);
             ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
-            ctx.arc (128.0, 128.0, 100.0, angle1, angle2);
+            ctx.arc (12.0, 12.0, 10.0, angle1, angle2);
             ctx.stroke ();
 
             warning ("making circle");
-            
+
             return true;
         });
 
         _canvas.invalidate ();
 
-        //  apply_ratio (ratio);
+        apply_ratio (ratio);
     }
 
     /**
