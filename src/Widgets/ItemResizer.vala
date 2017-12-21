@@ -1,0 +1,174 @@
+/*
+* Copyright (C) 2017
+*
+* This program or library is free software; you can redistribute it
+* and/or modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 3 of the License, or (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General
+* Public License along with this library; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA.
+*
+* Authored by: Felipe Escoto <felescoto95@hotmail.com>
+*/
+
+public class GtkCanvas.Resizer {
+    private const int SIZE = 10;
+    private const float OFFSET = 5;
+
+    private unowned Clutter.Actor canvas_actor;
+    private unowned GtkCanvas.CanvasItem? item = null;
+    private bool updating = false;
+
+    /*
+    Grabber Pos: 0 1 2
+                 7   3
+                 6 5 4
+    */
+    private GtkCanvas.CanvasItem grabber[8];
+    private int selected_id = -1;
+
+    public bool visible {
+        set {
+            for (int i = 0; i < 8; i++) {
+                grabber[i].visible = value;
+            }
+        }
+    }
+
+    /*
+    * Creates the widgets needed to re-size {@link Gtk.Canvas.CanvasItem}.
+    *
+    * @param actor The actor from a {@link GtkCanvas.Canvas}.
+    */
+    public Resizer (Clutter.Actor actor) {
+        canvas_actor = actor;
+
+        for (int i = 0; i < 8; i++) {
+            grabber[i] = make_grabber (i);
+        }
+    }
+
+    private GtkCanvas.CanvasItem make_grabber (int id) {
+        var g = new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        canvas_actor.add (g);
+
+        g.selected.connect (() => {
+            selected_id = id;
+        });
+
+        g.updated.connect (() => {
+            if (!updating) {
+                resize (id);
+            }
+        });
+
+        g.on_move_end.connect (() => {
+            selected_id = -1;
+            update ();
+        });
+
+        return g;
+    }
+
+    public void select_item (GtkCanvas.CanvasItem item) {
+        for (int i = 0; i < 8; i++) {
+            canvas_actor.set_child_above_sibling (grabber[i], null);
+        }
+
+        if (this.item != null) {
+            this.item.updated.disconnect (update);
+        }
+
+        this.item = item;
+        item.updated.connect (update);
+        selected_id = -1;
+        visible = true;
+        update ();
+    }
+
+    private void update () {
+        if (item == null) return;
+        updating = true;
+
+        if (selected_id != 0)
+            grabber[0].set_rectangle ((int) (item.x - OFFSET), (int) (item.y - OFFSET), null, null);
+        if (selected_id != 1)
+            grabber[1].set_rectangle ((int) (item.x + item.width / 2 - OFFSET), (int) (item.y - OFFSET), null, null);
+        if (selected_id != 2)
+            grabber[2].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y  - OFFSET), null, null);
+        if (selected_id != 3)
+            grabber[3].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y + item.height / 2 - OFFSET), null, null);
+        if (selected_id != 4)
+            grabber[4].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+        if (selected_id != 5)
+            grabber[5].set_rectangle ((int) (item.x + item.width / 2 - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+        if (selected_id != 6)
+            grabber[6].set_rectangle ((int) (item.x - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+        if (selected_id != 7)
+            grabber[7].set_rectangle ((int) (item.x - OFFSET), (int) (item.y + item.height / 2 - OFFSET), null, null);
+
+        updating = false;
+    }
+
+    /*
+    Grabber Pos: 0 1 2
+                 7   3
+                 6 5 4
+    */
+    private void resize (int id) {
+        switch (id) {
+            case 0:
+                item.set_rectangle (
+                    (int) ((grabber[0].x + OFFSET) / (item.ratio)),
+                    (int) ((grabber[0].y + OFFSET) / (item.ratio)),
+                    null,//(int) ((grabber[2].x - grabber[0].y) / (item.ratio)),
+                    null//,(int) ((grabber[2].real_y - grabber[0].real_y))
+                );
+                break;
+            case 1:
+                item.set_rectangle (
+                    null,
+                    (int) ((grabber[1].y + OFFSET) / (item.ratio)),
+                    null,
+                    null
+                );
+                break;
+            case 3:
+                item.set_rectangle (
+                    null,
+                    null,
+                    (int) ((grabber[3].x - (item.x) + OFFSET) / (item.ratio)),
+                    null);
+                break;
+            case 4:
+                item.set_rectangle (
+                    null,
+                    null,
+                    (int) ((grabber[4].x - (item.x) + OFFSET) / (item.ratio)),
+                    (int) ((grabber[4].y - (item.y) + OFFSET) / (item.ratio)));
+                break;
+            case 5:
+                item.set_rectangle (
+                    null,
+                    null,
+                    null,
+                    (int) ((grabber[5].y - (item.y) + OFFSET) / (item.ratio)));
+                break;
+            case 6:
+                item.set_rectangle (
+                    null,
+                    null,
+                    null,
+                    (int) ((grabber[6].y - (item.y) + OFFSET) / (item.ratio)));
+            break;
+        }
+    }
+}

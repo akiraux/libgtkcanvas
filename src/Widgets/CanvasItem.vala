@@ -33,6 +33,16 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public signal void selected (Clutter.ModifierType modifiers);
 
+    /**
+     * Signal triggered when the rectangle of this changes
+     */
+    public signal void updated ();
+
+    /**
+     * Triggered after a move operation, when the mouse button is lifted
+     */
+    public signal void on_move_end ();
+
     private MoveAction move_action;
     private HoverAction hover_action;
 
@@ -108,5 +118,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         height = (int) Math.round (real_h * ratio);
         x = (int) Math.round (real_x * ratio);
         y = (int) Math.round (real_y * ratio);
+
+        updated ();
     }
 }
