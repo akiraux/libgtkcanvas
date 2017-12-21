@@ -99,21 +99,21 @@ public class GtkCanvas.Resizer {
         updating = true;
 
         if (selected_id != 0)
-            grabber[0].set_rectangle ((int) (item.x - OFFSET), (int) (item.y - OFFSET), null, null);
+            grabber[0].set_rectangle ((item.x - OFFSET), (item.y - OFFSET), null, null);
         if (selected_id != 1)
-            grabber[1].set_rectangle ((int) (item.x + item.width / 2 - OFFSET), (int) (item.y - OFFSET), null, null);
+            grabber[1].set_rectangle ((item.x + item.width / 2 - OFFSET), (item.y - OFFSET), null, null);
         if (selected_id != 2)
-            grabber[2].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y  - OFFSET), null, null);
+            grabber[2].set_rectangle ((item.x + item.width - OFFSET), (item.y  - OFFSET), null, null);
         if (selected_id != 3)
-            grabber[3].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y + item.height / 2 - OFFSET), null, null);
+            grabber[3].set_rectangle ((item.x + item.width - OFFSET), (item.y + item.height / 2 - OFFSET), null, null);
         if (selected_id != 4)
-            grabber[4].set_rectangle ((int) (item.x + item.width - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+            grabber[4].set_rectangle ((item.x + item.width - OFFSET), (item.y + item.height - OFFSET), null, null);
         if (selected_id != 5)
-            grabber[5].set_rectangle ((int) (item.x + item.width / 2 - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+            grabber[5].set_rectangle ((item.x + item.width / 2 - OFFSET), (item.y + item.height - OFFSET), null, null);
         if (selected_id != 6)
-            grabber[6].set_rectangle ((int) (item.x - OFFSET), (int) (item.y + item.height - OFFSET), null, null);
+            grabber[6].set_rectangle ((item.x - OFFSET), (item.y + item.height - OFFSET), null, null);
         if (selected_id != 7)
-            grabber[7].set_rectangle ((int) (item.x - OFFSET), (int) (item.y + item.height / 2 - OFFSET), null, null);
+            grabber[7].set_rectangle ((item.x - OFFSET), (item.y + item.height / 2 - OFFSET), null, null);
 
         updating = false;
     }
@@ -127,48 +127,63 @@ public class GtkCanvas.Resizer {
         switch (id) {
             case 0:
                 item.set_rectangle (
-                    (int) ((grabber[0].x + OFFSET) / (item.ratio)),
-                    (int) ((grabber[0].y + OFFSET) / (item.ratio)),
-                    null,//(int) ((grabber[2].x - grabber[0].y) / (item.ratio)),
-                    null//,(int) ((grabber[2].real_y - grabber[0].real_y))
+                    (grabber[0].x + OFFSET) / (item.ratio),
+                    (grabber[0].y + OFFSET) / (item.ratio),
+                    (item.width + (item.x - grabber[0].x - OFFSET)) / item.ratio,
+                    (item.height + (item.y - grabber[0].y - OFFSET)) / item.ratio
                 );
                 break;
             case 1:
                 item.set_rectangle (
                     null,
-                    (int) ((grabber[1].y + OFFSET) / (item.ratio)),
+                    (grabber[1].y + OFFSET) / (item.ratio),
                     null,
-                    null
+                    (item.height + (item.y - grabber[1].y - OFFSET)) / item.ratio
+                );
+                break;
+            case 2:
+                item.set_rectangle (
+                    null,
+                    (grabber[2].y + OFFSET) / (item.ratio),
+                    ((grabber[2].x - (item.x) + OFFSET) / (item.ratio)),
+                    (item.height + (item.y - grabber[2].y - OFFSET)) / item.ratio
                 );
                 break;
             case 3:
                 item.set_rectangle (
                     null,
                     null,
-                    (int) ((grabber[3].x - (item.x) + OFFSET) / (item.ratio)),
+                    ((grabber[3].x - (item.x) + OFFSET) / (item.ratio)),
                     null);
                 break;
             case 4:
                 item.set_rectangle (
                     null,
                     null,
-                    (int) ((grabber[4].x - (item.x) + OFFSET) / (item.ratio)),
-                    (int) ((grabber[4].y - (item.y) + OFFSET) / (item.ratio)));
+                    ((grabber[4].x - (item.x) + OFFSET) / (item.ratio)),
+                    ((grabber[4].y - (item.y) + OFFSET) / (item.ratio)));
                 break;
             case 5:
                 item.set_rectangle (
                     null,
                     null,
                     null,
-                    (int) ((grabber[5].y - (item.y) + OFFSET) / (item.ratio)));
+                    ((grabber[5].y - (item.y) + OFFSET) / (item.ratio)));
                 break;
             case 6:
                 item.set_rectangle (
+                    (grabber[6].x + OFFSET) / (item.ratio),
                     null,
+                    (item.width + (item.x - grabber[6].x - OFFSET)) / item.ratio,
+                    ((grabber[6].y - (item.y) + OFFSET) / (item.ratio)));
+                break;
+            case 7:
+                item.set_rectangle (
+                    (grabber[7].x + OFFSET) / (item.ratio),
                     null,
-                    null,
-                    (int) ((grabber[6].y - (item.y) + OFFSET) / (item.ratio)));
-            break;
+                    (item.width + (item.x - grabber[7].x - OFFSET)) / item.ratio,
+                    null);
+                break;
         }
     }
 }

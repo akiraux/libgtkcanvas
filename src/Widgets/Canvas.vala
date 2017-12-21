@@ -36,7 +36,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private List<CanvasItem> items;
 
     private int current_allocated_width;
-    private double current_ratio = 1.0;
+    private float current_ratio = 1.0f;
 
     private GtkClutter.Embed stage;
     private Resizer resizer;
@@ -47,7 +47,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     *
     * Defaults to 1.0, and must be larger than 0. Currently does not do anything until scrolling gets implemented
     */
-    public double zoom_level {
+    public float zoom_level {
         get {
             return _zoom_level;
         } set {
@@ -57,7 +57,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
             update_current_ratio ();
         }
     }
-    private double _zoom_level = 1.0;
+    private float _zoom_level = 1.0f;
 
    /**
     * The "virtual" width of the canvas. This is the size in pixels that the canvas will represent.
@@ -154,7 +154,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;
 
-        current_ratio = ((double)(current_allocated_width) / width) * zoom_level;
+        current_ratio = ((float) (current_allocated_width) / width) * zoom_level;
 
         foreach (var item in items) {
             item.apply_ratio (current_ratio);
