@@ -116,17 +116,31 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     }
 
    /**
-    * Adds a test shape. Great for testing the library!
+    * Adds a test rectangle shape. Great for testing the library!
     *
     * @param color the color the test-shape will be, in CSS format
     * @param rotation the amount of degrees the item will be rotated
     */
-    public CanvasItem add_test_shape (string color, double rotation) {
-        var item = new CanvasItem ();
+    public CanvasItem add_rectangle_shape (string color, double rotation) {
+        var item = new CanvasItem ("rectangle");
         item.background_color = Clutter.Color.from_string (color);
 
         var rotate = new Clutter.RotateAction ();
         rotate.rotate (item, rotation);
+
+        add_item (item);
+        return item;
+    }
+
+    /**
+    * Adds a test circle shape. Great for testing the library!
+    *
+    * @param color the color the test-shape will be, in CSS format
+    * @param rotation the amount of degrees the item will be rotated
+    */
+    public CanvasItem add_circle_shape (string color) {
+        var item = new CanvasItem ("circle");
+        item.background_color = Clutter.Color.from_string (color);
 
         add_item (item);
         return item;

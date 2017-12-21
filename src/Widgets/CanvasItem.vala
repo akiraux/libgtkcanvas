@@ -27,6 +27,10 @@
  */
 public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
+     * Set the type of shape to generate as a test
+     */
+    public string shape { get; set; }
+    /**
      * Signal triggered when this is selected by the user.
      *
      * @param modifiers this is a mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked
@@ -46,6 +50,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public bool clicked { get; internal set; default = false; }
 
+
     public int real_x { get; private set; }
     public int real_y { get; private set; }
     public int real_w { get; private set; }
@@ -53,10 +58,14 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
 
     internal double ratio;
 
+    public CanvasItem (string shape) {
+        this.shape = shape;
+        create_shape ();
+    }
+
     construct {
         reactive = true;
 
-        set_rectangle (0, 0, 100, 100);
         move_action = new MoveAction (this);
         hover_action = new HoverAction (this);
 
@@ -67,6 +76,43 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         leave_event.connect (() => {
             hover_action.toggle (false);
         });
+    }
+
+    public void create_shape () {
+        switch (shape) {
+            case "rectangle":
+                set_rectangle (0, 0, 100, 100);
+            break;
+            case "circle":
+                set_circle (0, 0, 100, 100);
+            break;
+        }
+    }
+
+    public void set_circle (int? x, int? y, int? w, int? h) {
+        double angle1 = 45.0  * (Math.PI/180.0); // angles are specified
+        double angle2 = 1800.0 * (Math.PI/180.0); // in radians
+
+        var _canvas = new Clutter.Canvas ();
+        _canvas.set_size( w, h );
+
+        set_size ( w, h );
+        set_content ( _canvas );
+
+        _canvas.draw.connect((ctx, width, height) => {
+            ctx.set_line_width(10.0);
+            ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
+            ctx.arc (128.0, 128.0, 100.0, angle1, angle2);
+            ctx.stroke ();
+
+            warning ("making circle");
+            
+            return true;
+        });
+
+        _canvas.invalidate ();
+
+        //  apply_ratio (ratio);
     }
 
     /**
