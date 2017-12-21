@@ -19,17 +19,13 @@
 * Authored by: Alessandro Castellani <castellani.ale@gmail.com>
 */
 
-/**
- * Show/Hide the bounding box for the item selection
- * Clutter.Rectangle is deprecated, needs to be converted in an element that can handle border color
- */
 internal class GtkCanvas.HoverAction : Object  {
     public bool toggled {
         get {
             return visible;
         } set {
             if (value && effect == null) {
-                effect = new HoverEffect (1, 10);
+                effect = new HoverEffect (2);
                 item.add_effect (effect);
             } else if (!value && effect != null) {
                 item.remove_effect (effect);
@@ -44,10 +40,19 @@ internal class GtkCanvas.HoverAction : Object  {
     private unowned CanvasItem item;
     HoverEffect? effect;
 
+    /**
+     * Initialize Class
+     * @param CanvasItem item [hovered item from canvas]
+     */
     public HoverAction (CanvasItem item) {
         this.item = item;
     }
 
+    /**
+     * Toggle the visibility of the bounding box
+     * @param bool toggle
+     * return void
+     */
     public void toggle (bool toggle) {
         toggled = toggle;
     }
