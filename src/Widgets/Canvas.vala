@@ -127,8 +127,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         var item = new CanvasItem ();
         item.background_color = Clutter.Color.from_string (color);
 
-        var rotate = new Clutter.RotateAction ();
-        rotate.rotate (item, rotation);
+        item.rotation = rotation;
 
         add_item (item);
         return item;

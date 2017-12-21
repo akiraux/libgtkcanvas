@@ -102,10 +102,42 @@ public class GtkCanvas.Resizer {
             grabber[0].set_rectangle ((item.x - OFFSET), (item.y - OFFSET), null, null);
         if (selected_id != 1)
             grabber[1].set_rectangle ((item.x + item.width / 2 - OFFSET), (item.y - OFFSET), null, null);
-        if (selected_id != 2)
-            grabber[2].set_rectangle ((item.x + item.width - OFFSET), (item.y  - OFFSET), null, null);
-        if (selected_id != 3)
-            grabber[3].set_rectangle ((item.x + item.width - OFFSET), (item.y + item.height / 2 - OFFSET), null, null);
+        if (selected_id != 2) {
+            var cx = item.x + item.width / 2;
+            var cy = item.y + item.width / 2;
+
+            var xr = (item.x + item.width - OFFSET) - cx;
+            var yr = (item.y - OFFSET) - cy;
+
+            var dis = Math.hypot (xr, yr);
+
+            var radians = to_radians (item.rotation);
+            var initial_angle = Math.atan (yr / xr);
+
+            var x = (dis * (Math.cos (radians + initial_angle))) + cx;
+            var y = (dis * (Math.sin (radians + initial_angle))) + cy;
+
+            grabber[2].set_rectangle ((float) x, (float) y, null, null);
+            //grabber[2].set_rectangle ((item.x + item.width - OFFSET), (item.y  - OFFSET), null, null);
+        }
+        if (selected_id != 3) {
+            var cx = item.x + item.width / 2;
+            var cy = item.y + item.width / 2;
+
+            var x = item.x + item.width - OFFSET;
+            var y = item.y + item.height / 2 - OFFSET;
+
+            var radians = to_radians (item.rotation);
+
+            var sin = Math.sin (radians);
+            var cos = Math.cos (radians);
+
+            var xf = (x - cx) * cos - (y - cy) * sin + cx;
+            var yf = (x - cx) * sin + (y - cy) * cos + cy;
+
+            grabber[3].set_rectangle ((float) xf, (float) yf, null, null);
+            // grabber[3].set_rectangle ((item.x + item.width - OFFSET), (item.y + item.height / 2 - OFFSET), null, null);
+        }
         if (selected_id != 4)
             grabber[4].set_rectangle ((item.x + item.width - OFFSET), (item.y + item.height - OFFSET), null, null);
         if (selected_id != 5)
@@ -116,6 +148,14 @@ public class GtkCanvas.Resizer {
             grabber[7].set_rectangle ((item.x - OFFSET), (item.y + item.height / 2 - OFFSET), null, null);
 
         updating = false;
+    }
+
+    static double to_radians (double degrees) {
+        return degrees / (180.0 / Math.PI);
+    }
+
+    static double to_degrees (double radians) {
+        return radians * (180.0 / Math.PI);
     }
 
     /*

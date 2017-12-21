@@ -61,6 +61,14 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     public float real_w { get; private set; }
     public float real_h { get; private set; }
 
+    public double rotation {
+        get {
+            return rotation_angle_z;
+        } set {
+            rotation_angle_z = value;
+        }
+    }
+
     internal float ratio = 1.0f;
 
     public CanvasItem.with_values (float x, float y, float w, float h, string color) {
