@@ -95,11 +95,9 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
 
         var _canvas = new Clutter.Canvas ();
         _canvas.set_size( w, h );
-
         set_size ( w, h );
-        set_content ( _canvas );
 
-        _canvas.draw.connect((ctx, width, height) => {
+        _canvas.draw.connect((ctx, w, h) => {
             ctx.set_line_width(10.0);
             ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
             ctx.arc (128.0, 128.0, 100.0, angle1, angle2);
@@ -110,7 +108,8 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
             return true;
         });
 
-        _canvas.invalidate ();
+        set_content ( _canvas );
+        _canvas.invalidate (); // forces the redraw
 
         //  apply_ratio (ratio);
     }
