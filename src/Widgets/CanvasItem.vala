@@ -61,11 +61,14 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     public float real_w { get; private set; }
     public float real_h { get; private set; }
 
+    private double _rotation = 0.0;
     public double rotation {
         get {
-            return rotation_angle_z;
+            return _rotation;
         } set {
-            rotation_angle_z = value;
+            _rotation = value;
+            var rotate = new Clutter.RotateAction ();
+            rotate.rotate (this, value);
         }
     }
 
