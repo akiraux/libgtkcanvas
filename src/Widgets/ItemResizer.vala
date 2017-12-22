@@ -23,6 +23,11 @@
  * The grabbers needed to resize a single item on the canvas
  */
 public class GtkCanvas.ItemResizer {
+    /**
+     * Signal triggered when a resize is starting
+     */
+    public signal void resize_start ();
+
     private const int SIZE = 10;
     private const float OFFSET = 5;
 
@@ -43,6 +48,23 @@ public class GtkCanvas.ItemResizer {
             }
         }
     }
+
+    /**
+    * Sets whether the resize controls on the canvas will appear or not
+    */
+    public bool enabled {
+        get {
+            return _enabled;
+        } set {
+            _enabled = value;
+            if (!value) {
+                for (int i = 0; i < 8; i++) {
+                    grabber[i].visible = false;
+                }
+            }
+        }
+    }
+    private bool _enabled;
 
     /**
     * Creates the widgets needed to re-size {@link GtkCanvas.CanvasItem}.
@@ -75,6 +97,7 @@ public class GtkCanvas.ItemResizer {
 
         g.selected.connect (() => {
             selected_id = id;
+            resize_start ();
         });
 
         g.updated.connect (() => {
@@ -97,6 +120,8 @@ public class GtkCanvas.ItemResizer {
     * @param item the canvas item it will position around
     */
     public void select_item (GtkCanvas.CanvasItem item) {
+        if (!enabled) return;
+
         for (int i = 0; i < 8; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }

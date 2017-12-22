@@ -75,7 +75,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the position x of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_x {
         get {
@@ -90,7 +90,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the position y of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_y {
         get {
@@ -105,7 +105,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the height of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_w {
         get {
@@ -120,7 +120,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the width of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_h {
         get {

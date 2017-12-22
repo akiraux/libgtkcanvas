@@ -32,6 +32,10 @@ int main (string argv[]) {
     canvas.add_test_shape ("red", 30.0);
     canvas.add_test_shape ("green", 0.0);
 
+    canvas.clicked.connect ((modifier) => {
+        canvas.resizer.visible = false;
+    });
+
     var canvas_label = new Gtk.Label ("Canvas Properties");
     canvas_label.get_style_context ().add_class ("h4");
 
