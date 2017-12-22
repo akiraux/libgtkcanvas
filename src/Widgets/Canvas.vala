@@ -36,9 +36,16 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private List<CanvasItem> items;
 
     private int current_allocated_width;
-    private double current_ratio = 1.0;
+    private float current_ratio = 1.0f;
 
     private GtkClutter.Embed stage;
+
+    /**
+    * The resizer the {@link GtkCanvas.CanvasItem}s in this canvas will use.
+    *
+    * Can be overwritten to make the items use a different style of resizer.
+    */
+    protected ItemResizer resizer { get; protected set; }
 
     /**
     * This value controls the zoom level the items will use.
@@ -46,7 +53,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     *
     * Defaults to 1.0, and must be larger than 0. Currently does not do anything until scrolling gets implemented
     */
-    public double zoom_level {
+    public float zoom_level {
         get {
             return _zoom_level;
         } set {
@@ -56,7 +63,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
             update_current_ratio ();
         }
     }
-    private double _zoom_level = 1.0;
+    private float _zoom_level = 1.0f;
 
    /**
     * The "virtual" width of the canvas. This is the size in pixels that the canvas will represent.
@@ -112,6 +119,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         items = new List<CanvasItem>();
 
+        resizer = new ItemResizer (actor);
         add (stage);
     }
 
@@ -125,8 +133,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         var item = new CanvasItem ();
         item.background_color = Clutter.Color.from_string (color);
 
-        var rotate = new Clutter.RotateAction ();
-        rotate.rotate (item, rotation);
+        item.rotation = rotation;
 
         add_item (item);
         return item;
@@ -144,6 +151,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         item.selected.connect ((modifiers) => {
             item_selected (item, modifiers);
+            resizer.select_item (item);
         });
     }
 
@@ -151,7 +159,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;
 
-        current_ratio = ((double)(current_allocated_width) / width) * zoom_level;
+        current_ratio = ((float) (current_allocated_width) / width) * zoom_level;
 
         foreach (var item in items) {
             item.apply_ratio (current_ratio);
