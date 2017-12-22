@@ -47,6 +47,22 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     private HoverAction hover_action;
 
     /**
+    * Sets if the hover effect should appear when you hover on this. Disabling the effect if currently visible;
+    */
+    public bool on_hover_effect {
+        get {
+            return _on_hover_effect;
+        } set {
+            if (!value) {
+                hover_action.toggle (false);
+            }
+
+            _on_hover_effect = value;
+        }
+    }
+    private bool _on_hover_effect = true;
+
+    /**
      * True if this is currently being dragged
      */
     public bool dragging { get; internal set; default = false; }
@@ -150,11 +166,15 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         hover_action = new HoverAction (this);
 
         enter_event.connect (() => {
-            hover_action.toggle (true);
+            if (on_hover_effect) {
+                hover_action.toggle (true);
+            }
         });
 
         leave_event.connect (() => {
-            hover_action.toggle (false);
+            if (on_hover_effect) {
+                hover_action.toggle (false);
+            }
         });
     }
 
