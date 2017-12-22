@@ -19,7 +19,10 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class GtkCanvas.Resizer {
+/**
+ * The grabbers needed to resize a single item on the canvas
+ */
+public class GtkCanvas.ItemResizer {
     private const int SIZE = 10;
     private const float OFFSET = 5;
 
@@ -27,14 +30,12 @@ public class GtkCanvas.Resizer {
     private unowned GtkCanvas.CanvasItem? item = null;
     private bool updating = false;
 
-    /*
-    Grabber Pos: 0 1 2
-                 7   3
-                 6 5 4
-    */
     private GtkCanvas.CanvasItem grabber[8];
     private int selected_id = -1;
 
+    /**
+    * Sets whether the resize controls on the canvas are visible or not
+    */
     public bool visible {
         set {
             for (int i = 0; i < 8; i++) {
@@ -43,12 +44,12 @@ public class GtkCanvas.Resizer {
         }
     }
 
-    /*
-    * Creates the widgets needed to re-size {@link Gtk.Canvas.CanvasItem}.
+    /**
+    * Creates the widgets needed to re-size {@link GtkCanvas.CanvasItem}.
     *
     * @param actor The actor from a {@link GtkCanvas.Canvas}.
     */
-    public Resizer (Clutter.Actor actor) {
+    public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
 
         for (int i = 0; i < 8; i++) {
@@ -56,8 +57,19 @@ public class GtkCanvas.Resizer {
         }
     }
 
+    /**
+    * Override this function if you want to style the grabbers different.
+    *
+    * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner
+    * @return a {@link GtkCanvas.CanvasItem} or subclass of it
+    */
+    public virtual GtkCanvas.CanvasItem create_grabber (int id) {
+        // TODO: Make a better shape for the grabbers
+        return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+    }
+
     private GtkCanvas.CanvasItem make_grabber (int id) {
-        var g = new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        var g = create_grabber (id);
         canvas_actor.add (g);
 
         g.selected.connect (() => {
@@ -78,6 +90,11 @@ public class GtkCanvas.Resizer {
         return g;
     }
 
+    /**
+    * Positions the resize grabbers around a {@link GtkCanvas.CanvasItem}
+    *
+    * @param item the canvas item it will position around
+    */
     public void select_item (GtkCanvas.CanvasItem item) {
         for (int i = 0; i < 8; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
@@ -94,6 +111,9 @@ public class GtkCanvas.Resizer {
         update ();
     }
 
+    /*
+    * Updates the positioning of all the grabbers on an item
+    */
     private void update () {
         if (item == null) return;
         updating = true;
@@ -189,10 +209,16 @@ public class GtkCanvas.Resizer {
         updating = false;
     }
 
+    /*
+    * Gets the x position of point A {x,y} on a centroid {cx, cy}.
+    */
     inline float get_rot_x (double x, double cx, double y, double cy, double sin, double cos) {
         return (float) ((x - cx) * cos - (y - cy) * sin + cx);
     }
 
+    /*
+    * Gets the y position of point A {x,y} on a centroid {cx, cy}.
+    */
     inline float get_rot_y (double x, double cx, double y, double cy, double sin, double cos) {
         return (float) ((x - cx) * sin + (y - cy) * cos + cy);
     }
@@ -206,9 +232,9 @@ public class GtkCanvas.Resizer {
     }
 
     /*
-    Grabber Pos: 0 1 2
-                 7   3
-                 6 5 4
+    * Depending on the grabbed grabber, resize the item acordingly
+    *
+    * To-do: Concider the rotation on the calculations. Might need to do the oposite of get_rot_x/y
     */
     private void resize (int id) {
         switch (id) {
