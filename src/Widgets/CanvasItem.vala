@@ -56,10 +56,65 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public bool clicked { get; internal set; default = false; }
 
-    public float real_x { get; private set; }
-    public float real_y { get; private set; }
-    public float real_w { get; private set; }
-    public float real_h { get; private set; }
+    /**
+    * Sets the position x of this shape on the canvas.
+    *
+    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    */
+    public float real_x {
+        get {
+            return _real_x;
+        } set {
+            _real_x = value;
+            apply_ratio (ratio);
+        }
+    }
+    private float _real_x;
+
+    /**
+    * Sets the position y of this shape on the canvas.
+    *
+    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    */
+    public float real_y {
+        get {
+            return _real_y;
+        } set {
+            _real_y = value;
+            apply_ratio (ratio);
+        }
+    }
+    private float _real_y;
+
+    /**
+    * Sets the height of this shape on the canvas.
+    *
+    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    */
+    public float real_w {
+        get {
+            return _real_w;
+        } set {
+            _real_w = value;
+            apply_ratio (ratio);
+        }
+    }
+    private float _real_w;
+
+    /**
+    * Sets the width of this shape on the canvas.
+    *
+    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    */
+    public float real_h {
+        get {
+            return _real_h;
+        } set {
+            _real_h = value;
+            apply_ratio (ratio);
+        }
+    }
+    private float _real_h;
 
     /**
      * The item's rotation. From 0 to 360 degrees
@@ -104,23 +159,23 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     }
 
     /**
-    * Set's the coordenates and size of this, ignoring nulls. This is where the "real_n" should be set.
+    * Set's the coordenates and size of this, ignoring nulls. Use this to set multiple "real_n" properties without causing uneeded updates.
     */
     public void set_rectangle (float? x, float? y, float? w, float? h) {
         if (x != null) {
-            real_x = x;
+            _real_x = x;
         }
 
         if (y != null) {
-            real_y = y;
+            _real_y = y;
         }
 
         if (w != null) {
-            real_w = w;
+            _real_w = w;
         }
 
         if (h != null) {
-            real_h = h;
+            _real_h = h;
         }
 
         apply_ratio (ratio);
