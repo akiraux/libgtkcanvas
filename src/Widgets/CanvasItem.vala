@@ -33,6 +33,16 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public signal void selected (Clutter.ModifierType modifiers);
 
+    /**
+     * Signal triggered when the rectangle of this changes
+     */
+    public signal void updated ();
+
+    /**
+     * Triggered after a move operation, when the mouse button is lifted
+     */
+    public signal void on_move_end ();
+
     private MoveAction move_action;
     private HoverAction hover_action;
 
@@ -46,17 +56,41 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public bool clicked { get; internal set; default = false; }
 
-    public int real_x { get; private set; }
-    public int real_y { get; private set; }
-    public int real_w { get; private set; }
-    public int real_h { get; private set; }
+    public float real_x { get; private set; }
+    public float real_y { get; private set; }
+    public float real_w { get; private set; }
+    public float real_h { get; private set; }
 
-    internal double ratio;
+    /**
+     * The item's rotation. From 0 to 360 degrees
+     */
+    public double rotation {
+        get {
+            return _rotation;
+        } set {
+            if (value < 0) return;
+
+            _rotation = value % 360;
+            rotation_angle_z = value % 360;
+        }
+    }
+    private double _rotation = 0.0;
+
+    internal float ratio = 1.0f;
+
+    public CanvasItem.with_values (float x, float y, float w, float h, string color) {
+        Object (background_color: Clutter.Color.from_string (color));
+        set_rectangle (x, y, w, h);
+    }
+
+    public CanvasItem () {
+        set_rectangle (0, 0, 100, 100);
+    }
 
     construct {
         reactive = true;
+        set_pivot_point (0.5f, 0.5f);
 
-        set_rectangle (0, 0, 100, 100);
         move_action = new MoveAction (this);
         hover_action = new HoverAction (this);
 
@@ -72,7 +106,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Set's the coordenates and size of this, ignoring nulls. This is where the "real_n" should be set.
     */
-    public void set_rectangle (int? x, int? y, int? w, int? h) {
+    public void set_rectangle (float? x, float? y, float? w, float? h) {
         if (x != null) {
             real_x = x;
         }
@@ -92,12 +126,14 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         apply_ratio (ratio);
     }
 
-    internal void apply_ratio (double ratio) {
+    internal void apply_ratio (float ratio) {
         this.ratio = ratio;
 
-        width = (int) Math.round (real_w  * ratio);
-        height = (int) Math.round (real_h * ratio);
-        x = (int) Math.round (real_x * ratio);
-        y = (int) Math.round (real_y * ratio);
+        width =  (real_w  * ratio);
+        height = (real_h * ratio);
+        x = (real_x * ratio);
+        y = (real_y * ratio);
+
+        updated ();
     }
 }
