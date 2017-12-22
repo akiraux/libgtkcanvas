@@ -20,19 +20,14 @@
 */
 
 /**
- * ShapeCircle is a child class of the parent {@link Clutter.Actor} that handles move, rotate, scale, etc.
+ * ShapeCircle is a child class of the parent CanvasItem {@link Clutter.Actor} that handles move, rotate, scale, etc.
  * 
- * This is a specific shape class to handle the generation of a Rectangular geometry
+ * This is a specific shape class to handle the generation of a Circle geometry
  */
 public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
-    private string color;
-    private double rotation;
-
     public ShapeCircle (string color, double rotation) {
         this.color = color;
         this.rotation = rotation;
-
-        //  background_color = Clutter.Color.from_string (color);
         
         real_x = 0;
         real_y = 0;
@@ -45,18 +40,16 @@ public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
 
         var _canvas = new Clutter.Canvas ();
         _canvas.set_size (100, 100);
-        set_size (100, 100);
 
         set_rectangle (null, null, 100, 100);
-        set_content (_canvas);
 
         _canvas.draw.connect((ctx, w, h) => {
-            ctx.set_line_width (1.0);
             ctx.set_source_rgb (0.0, 0.8, 0.0);
-            ctx.arc (w/2+1, h/2+1, w/2-2, angle1, angle2);
+            ctx.arc (w/2, h/2, w/2, angle1, angle2);
             ctx.fill ();
 
             // Create the stroke
+            // ctx.set_line_width (1.0);
             // ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
             // ctx.arc (w/2+1, h/2+1, w/2-2, angle1, angle2);
             // ctx.stroke ();
@@ -68,8 +61,6 @@ public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
         _canvas.invalidate (); // forces the redraw
 
         apply_ratio (ratio);
-
-        var rotate = new Clutter.RotateAction ();
-        rotate.rotate (this, rotation);
+        apply_rotation (rotation);
     }
 }

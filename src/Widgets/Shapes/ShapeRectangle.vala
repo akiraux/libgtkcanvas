@@ -20,14 +20,11 @@
 */
 
 /**
- * ShapeRectangle is a child class of the parent {@link Clutter.Actor} that handles move, rotate, scale, etc.
+ * ShapeRectangle is a child class of the parent CanvasItem {@link Clutter.Actor} that handles move, rotate, scale, etc.
  * 
  * This is a specific shape class to handle the generation of a Rectangular geometry
  */
 public class GtkCanvas.ShapeRectangle : GtkCanvas.CanvasItem {
-    private string color;
-    private double rotation;
-
     public ShapeRectangle (string color, double rotation) {
         this.color = color;
         this.rotation = rotation;
@@ -41,8 +38,6 @@ public class GtkCanvas.ShapeRectangle : GtkCanvas.CanvasItem {
         real_h = 100;
         
         apply_ratio (ratio);
-
-        var rotate = new Clutter.RotateAction ();
-        rotate.rotate (this, rotation);
+        apply_rotation (rotation);
     }
 }
