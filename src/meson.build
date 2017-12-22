@@ -2,7 +2,7 @@ subdir('Utils')
 subdir('Widgets')
 
 # Keep this updated to generate docs
-valasources=files_widgets+files_utils
+valasources=files_widgets+files_utils+files_shapes
 sources = files([])
 
 vapidir = join_paths (get_option('datadir'),'vala','vapi')
@@ -54,7 +54,7 @@ LT_REVISION='0'
 LT_AGE='0'
 LT_VERSION='1'
 lib = library(VERSIONED_PROJECT_NAME,
-	files_utils+files_widgets,
+	files_utils+files_widgets+files_shapes,
 	version : LT_VERSION,
 	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
 	vala_header : PROJECT_NAME+'.h',

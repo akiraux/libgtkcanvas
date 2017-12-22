@@ -20,6 +20,9 @@
 */
 
 internal class GtkCanvas.HoverAction : Object  {
+    /**
+     * Toggle the visibility of the HoverEffect()
+     */
     public bool toggled {
         get {
             return visible;
@@ -37,8 +40,16 @@ internal class GtkCanvas.HoverAction : Object  {
     }
 
     bool visible = false;
+
+    /**
+     * Parent CanvasItem passed on mouse enter
+     */
     private unowned CanvasItem item;
-    HoverEffect? effect;
+
+    /**
+     * HoverEffect (int border_width ) 
+     */
+    private HoverEffect? effect { get; set; default = null; }
 
     /**
      * Initialize Class

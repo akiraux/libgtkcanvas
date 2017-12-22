@@ -27,10 +27,6 @@
  */
 public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
-     * Set the type of shape to generate as a test
-     */
-    public string shape { get; set; }
-    /**
      * Signal triggered when this is selected by the user.
      *
      * @param modifiers this is a mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked
@@ -50,18 +46,22 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
      */
     public bool clicked { get; internal set; default = false; }
 
+    /**
+     * Location coordinates
+     */
+    public int real_x { get; set; }
+    public int real_y { get; set; }
 
-    public int real_x { get; private set; }
-    public int real_y { get; private set; }
-    public int real_w { get; private set; }
-    public int real_h { get; private set; }
+    /**
+     * Size units
+     */
+    public int real_w { get; set; }
+    public int real_h { get; set; }
 
+    /**
+     * Ratio relative to the container to properly scale all the elements
+     */
     internal double ratio;
-
-    public CanvasItem (string shape) {
-        this.shape = shape;
-        create_shape ();
-    }
 
     construct {
         reactive = true;
@@ -78,42 +78,31 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         });
     }
 
-    public void create_shape () {
-        switch (shape) {
-            case "rectangle":
-                set_rectangle (0, 0, 100, 100);
-            break;
-            case "circle":
-                set_circle (0, 0, 100, 100);
-            break;
-        }
-    }
+    //  public void set_circle (int? x, int? y, int? w, int? h) {
+    //      double angle1 = 0.0  * (Math.PI/180.0); // angles are specified
+    //      double angle2 = 360.0 * (Math.PI/180.0); // in radians
 
-    public void set_circle (int? x, int? y, int? w, int? h) {
-        double angle1 = 0.0  * (Math.PI/180.0); // angles are specified
-        double angle2 = 360.0 * (Math.PI/180.0); // in radians
+    //      var _canvas = new Clutter.Canvas ();
+    //      _canvas.set_size( w, h );
+    //      set_size ( w, h );
 
-        var _canvas = new Clutter.Canvas ();
-        _canvas.set_size( w, h );
-        set_size ( w, h );
+    //      set_rectangle (null, null, w, h );
+    //      set_content ( _canvas );
 
-        set_rectangle (null, null, w, h );
-        set_content ( _canvas );
+    //      _canvas.draw.connect((ctx, w, h) => {
+    //          ctx.set_line_width(1.0);
+    //          ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
+    //          ctx.arc (w/2+1, h/2+1, w/2-2, angle1, angle2);
+    //          ctx.stroke ();
 
-        _canvas.draw.connect((ctx, w, h) => {
-            ctx.set_line_width(1.0);
-            ctx.set_source_rgba (1, 0.2, 0.2, 0.6);
-            ctx.arc (w/2+1, h/2+1, w/2-2, angle1, angle2);
-            ctx.stroke ();
+    //          return true;
+    //      });
 
-            return true;
-        });
+    //      set_content ( _canvas );
+    //      _canvas.invalidate (); // forces the redraw
 
-        set_content ( _canvas );
-        _canvas.invalidate (); // forces the redraw
-
-        apply_ratio (ratio);
-    }
+    //      //  apply_ratio (ratio);
+    //  }
 
     /**
     * Set's the coordenates and size of this, ignoring nulls. This is where the "real_n" should be set.
