@@ -155,6 +155,23 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         });
     }
 
+    /**
+    * Removes a {@link CanvasItem} from this
+    *
+    * @param item the canvas item to be removed
+    */
+    public void remove_item (CanvasItem item) {
+        items.remove (item);
+        stage.get_stage ().remove_child (item);
+    }
+
+    /**
+    * Returns a read-only list of all the {@link GtkCanvas.CanvasItem}s on this canvas
+    */
+    public List<weak CanvasItem> get_items () {
+        return items.copy ();
+    }
+
     private void update_current_ratio () {
         current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;

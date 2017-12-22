@@ -70,6 +70,7 @@ public class GtkCanvas.ItemResizer {
 
     private GtkCanvas.CanvasItem make_grabber (int id) {
         var g = create_grabber (id);
+        g.visible = false;
         canvas_actor.add (g);
 
         g.selected.connect (() => {
