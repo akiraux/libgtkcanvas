@@ -21,17 +21,17 @@
 
 /**
  * ShapeCircle is a child class of the parent CanvasItem {@link Clutter.Actor} that handles move, rotate, scale, etc.
- * 
+ *
  * This is a specific shape class to handle the generation of a Circle geometry
  */
 public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
     public ShapeCircle (string color, double rotation) {
         this.color = color;
         this.rotation = rotation;
-        
+
         real_x = 0;
         real_y = 0;
-        
+
         real_w = 100;
         real_h = 100;
 

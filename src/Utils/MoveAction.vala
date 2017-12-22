@@ -75,5 +75,7 @@ internal class GtkCanvas.MoveAction : Clutter.DragAction {
         if (item.dragging) {
             item.dragging = false;
         }
+
+        item.on_move_end ();
     }
 }
