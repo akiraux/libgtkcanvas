@@ -99,7 +99,7 @@ public class GtkCanvas.Resizer {
         updating = true;
 
         var cx = item.x + item.width / 2;
-        var cy = item.y + item.width / 2;
+        var cy = item.y + item.height / 2;
 
         var radians = to_radians (item.rotation);
 
@@ -127,17 +127,13 @@ public class GtkCanvas.Resizer {
         }
 
         if (selected_id != 2) {
-            var xr = (item.x + item.width) - cx;
-            var yr = (item.y) - cy;
+            var x = item.x + item.width;
+            var y = item.y;
 
-            var dis = Math.hypot (xr, yr);
+            var xf = get_rot_x (x, cx, y, cy, _sin, _cos);
+            var yf = get_rot_y (x, cx, y, cy, _sin, _cos);
 
-            var initial_angle = Math.atan (yr / xr);
-
-            var x = (dis * (Math.cos (radians + initial_angle))) + cx;
-            var y = (dis * (Math.sin (radians + initial_angle))) + cy;
-
-            grabber[2].set_rectangle ((float) x - OFFSET, (float) y - OFFSET, null, null);
+            grabber[2].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
         }
 
         if (selected_id != 3) {

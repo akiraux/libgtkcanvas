@@ -67,8 +67,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
             return _rotation;
         } set {
             _rotation = value;
-            var rotate = new Clutter.RotateAction ();
-            rotate.rotate (this, value);
+            rotation_angle_z = value;
         }
     }
 
