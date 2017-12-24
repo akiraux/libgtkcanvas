@@ -143,6 +143,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
 
             _rotation = value % 360;
             rotation_angle_z = value % 360;
+            updated ();
         }
     }
     private double _rotation = 0.0;
