@@ -64,7 +64,7 @@ public class GtkCanvas.ItemResizer {
             }
         }
     }
-    private bool _enabled;
+    private bool _enabled = true;
 
     /**
     * Creates the widgets needed to re-size {@link GtkCanvas.CanvasItem}.
@@ -253,74 +253,88 @@ public class GtkCanvas.ItemResizer {
         return degrees / (180.0 / Math.PI);
     }
 
-    inline double to_degrees (double radians) {
-        return radians * (180.0 / Math.PI);
-    }
-
     /*
     * Depending on the grabbed grabber, resize the item acordingly
     *
     * To-do: Concider the rotation on the calculations. Might need to do the oposite of get_rot_x/y
     */
     private void resize (int id) {
+        float x, y;
+
+        if (item.rotation != 0) {
+            var cx = item.x + item.width / 2;
+            var cy = item.y + item.height / 2;
+
+            var radians = to_radians ((-1) * item.rotation);
+
+            var _sin = Math.sin (radians);
+            var _cos = Math.cos (radians);
+
+            x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+            y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+        } else {
+            x = grabber[id].x;
+            y = grabber[id].y;
+        }
+
         switch (id) {
             case 0:
                 item.set_rectangle (
-                    (grabber[0].x + OFFSET) / (item.ratio),
-                    (grabber[0].y + OFFSET) / (item.ratio),
-                    (item.width + (item.x - grabber[0].x - OFFSET)) / item.ratio,
-                    (item.height + (item.y - grabber[0].y - OFFSET)) / item.ratio
+                    (x + OFFSET) / (item.ratio),
+                    (y + OFFSET) / (item.ratio),
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 1:
                 item.set_rectangle (
                     null,
-                    (grabber[1].y + OFFSET) / (item.ratio),
+                    (y + OFFSET) / (item.ratio),
                     null,
-                    (item.height + (item.y - grabber[1].y - OFFSET)) / item.ratio
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 2:
                 item.set_rectangle (
                     null,
-                    (grabber[2].y + OFFSET) / (item.ratio),
-                    ((grabber[2].x - (item.x) + OFFSET) / (item.ratio)),
-                    (item.height + (item.y - grabber[2].y - OFFSET)) / item.ratio
+                    (y + OFFSET) / (item.ratio),
+                    ((x - (item.x) + OFFSET) / (item.ratio)),
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 3:
                 item.set_rectangle (
                     null,
                     null,
-                    ((grabber[3].x - (item.x) + OFFSET) / (item.ratio)),
+                    ((x - (item.x) + OFFSET) / (item.ratio)),
                     null);
                 break;
             case 4:
                 item.set_rectangle (
                     null,
                     null,
-                    ((grabber[4].x - (item.x) + OFFSET) / (item.ratio)),
-                    ((grabber[4].y - (item.y) + OFFSET) / (item.ratio)));
+                    (x - (item.x) + OFFSET) / (item.ratio),
+                    (y - (item.y) + OFFSET) / (item.ratio));
                 break;
             case 5:
                 item.set_rectangle (
                     null,
                     null,
                     null,
-                    ((grabber[5].y - (item.y) + OFFSET) / (item.ratio)));
+                    (y - item.y + OFFSET) / (item.ratio));
                 break;
             case 6:
                 item.set_rectangle (
-                    (grabber[6].x + OFFSET) / (item.ratio),
+                    (x + OFFSET) / (item.ratio),
                     null,
-                    (item.width + (item.x - grabber[6].x - OFFSET)) / item.ratio,
-                    ((grabber[6].y - (item.y) + OFFSET) / (item.ratio)));
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
+                    ((y - (item.y) + OFFSET) / (item.ratio)));
                 break;
             case 7:
                 item.set_rectangle (
-                    (grabber[7].x + OFFSET) / (item.ratio),
+                    (x + OFFSET) / (item.ratio),
                     null,
-                    (item.width + (item.x - grabber[7].x - OFFSET)) / item.ratio,
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
                     null);
                 break;
         }
