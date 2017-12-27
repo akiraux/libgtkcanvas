@@ -28,9 +28,9 @@ int main (string argv[]) {
     window.resize (1000, 800);
 
     var canvas = new GtkCanvas.Canvas (600, 400);
-    canvas.add_test_shape ("blue", 45.0);
-    canvas.add_test_shape ("red", 30.0);
-    canvas.add_test_shape ("green", 0.0);
+    canvas.add_shape ("rectangle", "blue", 45.0);
+    canvas.add_shape ("rectangle", "red", 30.0);
+    canvas.add_shape ("circle", "green", 0.0);
 
     canvas.clicked.connect ((modifier) => {
         canvas.resizer.visible = false;
@@ -57,8 +57,7 @@ int main (string argv[]) {
 
     var new_shape = new Gtk.Button.with_label ("Add Shape");
     new_shape.clicked.connect (() => {
-        var actor = canvas.add_test_shape ("rgb(255, 198, 153)", 0.0);
-        actor.set_rectangle (null, null, 200, 150);
+        var actor = canvas.add_shape ("rectangle", "yellow", 0.0);
 
         // Example on how you can add an animation
         actor.set_pivot_point (0.5f, 0.5f);

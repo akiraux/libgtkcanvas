@@ -148,6 +148,9 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     }
     private double _rotation = 0.0;
 
+    /**
+     * Ratio relative to the container to properly scale all the elements
+     */
     internal float ratio = 1.0f;
 
     public CanvasItem.with_values (float x, float y, float w, float h, string color) {
