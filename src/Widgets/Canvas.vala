@@ -38,7 +38,6 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
      */
     public signal void clicked (Clutter.ModifierType modifiers);
 
-    public CanvasItem item;
     private List<CanvasItem> items;
 
     private int current_allocated_width;
@@ -158,12 +157,17 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     * @param rotation the amount of degrees the item will be rotated
     */
     public CanvasItem add_shape (string type, string color, double rotation) {
+        CanvasItem item;
+
         switch (type) {
             case "rectangle":
                 item = new ShapeRectangle (color, rotation);
             break;
             case "circle":
                 item = new ShapeCircle (color, rotation);
+            break;
+            default:
+                item = null;
             break;
         }
 
