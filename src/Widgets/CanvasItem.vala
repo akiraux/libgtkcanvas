@@ -167,13 +167,13 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         hover_action = new HoverAction (this);
 
         enter_event.connect (() => {
-            if (on_hover_effect) {
+            if (this.on_hover_effect) {
                 hover_action.toggle (true);
             }
         });
 
         leave_event.connect (() => {
-            if (on_hover_effect) {
+            if (this.on_hover_effect) {
                 hover_action.toggle (false);
             }
         });
