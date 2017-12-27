@@ -35,7 +35,7 @@ public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
             if (value == "") return;
 
             _color = value;
-            _clutter_color = Clutter.Color.from_string (value);
+            clutter_color = Clutter.Color.from_string (value);
         }
     }
     private string _color;
@@ -46,11 +46,10 @@ public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
         } set {
             if (value == null) return;
 
-            clutter_color = value;
             _clutter_color = value;
         }
     }
-    private Clutter.Color? _clutter_color;
+    private Clutter.Color _clutter_color;
 
     public ShapeCircle (string color, double rotation) {
         this.color = color;
@@ -65,7 +64,7 @@ public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
         set_rectangle (0, 0, 100, 100);
 
         _canvas.draw.connect((ctx, w, h) => {
-            ctx.set_source_rgb (_clutter_color.red, _clutter_color.green, _clutter_color.blue);
+            ctx.set_source_rgb (clutter_color.red, clutter_color.green, clutter_color.blue);
             ctx.arc (w/2, h/2, w/2, angle1, angle2);
             ctx.fill ();
 
