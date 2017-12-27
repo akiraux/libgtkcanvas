@@ -167,7 +167,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
                 item = new ShapeCircle (color, rotation);
             break;
             default:
-                item = null;
+                item = new ShapeRectangle (color, rotation);
             break;
         }
 
