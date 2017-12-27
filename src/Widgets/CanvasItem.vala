@@ -47,6 +47,22 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     private HoverAction hover_action;
 
     /**
+    * Sets if the hover effect should appear when you hover on this. Disabling the effect if currently visible;
+    */
+    public bool on_hover_effect {
+        get {
+            return _on_hover_effect;
+        } set {
+            if (!value) {
+                hover_action.toggle (false);
+            }
+
+            _on_hover_effect = value;
+        }
+    }
+    private bool _on_hover_effect = true;
+
+    /**
      * True if this is currently being dragged
      */
     public bool dragging { get; internal set; default = false; }
@@ -59,7 +75,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the position x of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_x {
         get {
@@ -74,7 +90,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the position y of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_y {
         get {
@@ -89,7 +105,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the height of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_w {
         get {
@@ -104,7 +120,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
     * Sets the width of this shape on the canvas.
     *
-    * Doing this causes an update on the aspect ratio. So it's better to use  {@link GtkCanvasItem.CanvasItem.set_rectangle}
+    * Doing this causes an update on the aspect ratio. So it's better to use set_rectangle
     */
     public float real_h {
         get {
@@ -127,6 +143,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
 
             _rotation = value % 360;
             rotation_angle_z = value % 360;
+            updated ();
         }
     }
     private double _rotation = 0.0;
@@ -153,11 +170,15 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         hover_action = new HoverAction (this);
 
         enter_event.connect (() => {
-            hover_action.toggle (true);
+            if (on_hover_effect) {
+                hover_action.toggle (true);
+            }
         });
 
         leave_event.connect (() => {
-            hover_action.toggle (false);
+            if (on_hover_effect) {
+                hover_action.toggle (false);
+            }
         });
     }
 

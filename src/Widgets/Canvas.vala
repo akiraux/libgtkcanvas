@@ -33,6 +33,11 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
      */
     public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
 
+    /**
+     * Signal triggered when the canvas is clicked, but not any of the items in this
+     */
+    public signal void clicked (Clutter.ModifierType modifiers);
+
     private List<CanvasItem> items;
 
     private int current_allocated_width;
@@ -45,7 +50,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     *
     * Can be overwritten to make the items use a different style of resizer.
     */
-    protected ItemResizer resizer { get; protected set; }
+    public ItemResizer resizer { get; protected set; }
 
     /**
     * This value controls the zoom level the items will use.
@@ -111,6 +116,8 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         Object (width: width, height: height, obey_child: false);
     }
 
+    private bool item_clicked = false;
+
     construct {
         stage = new GtkClutter.Embed ();
         stage.set_use_layout_size (false);
@@ -118,8 +125,27 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         var actor = stage.get_stage ();
 
         items = new List<CanvasItem>();
-
         resizer = new ItemResizer (actor);
+
+        var drag_action = new Clutter.DragAction ();
+        actor.add_action (drag_action);
+
+        drag_action.drag_end.connect ((a, x, y, modifiers) => {
+            if (!item_clicked) {
+                clicked (modifiers);
+            }
+
+            item_clicked = false;
+        });
+
+        resizer.resize_start.connect (() => {
+            item_clicked = true;
+        });
+
+        item_selected.connect (() => {
+            item_clicked = true;
+        });
+
         add (stage);
     }
 
@@ -160,6 +186,23 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
             item_selected (item, modifiers);
             resizer.select_item (item);
         });
+    }
+
+    /**
+    * Removes a {@link CanvasItem} from this
+    *
+    * @param item the canvas item to be removed
+    */
+    public void remove_item (CanvasItem item) {
+        items.remove (item);
+        stage.get_stage ().remove_child (item);
+    }
+
+    /**
+    * Returns a read-only list of all the {@link GtkCanvas.CanvasItem}s on this canvas
+    */
+    public List<weak CanvasItem> get_items () {
+        return items.copy ();
     }
 
     private void update_current_ratio () {

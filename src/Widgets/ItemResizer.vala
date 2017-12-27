@@ -23,6 +23,11 @@
  * The grabbers needed to resize a single item on the canvas
  */
 public class GtkCanvas.ItemResizer {
+    /**
+     * Signal triggered when a resize is starting
+     */
+    public signal void resize_start ();
+
     private const int SIZE = 10;
     private const float OFFSET = 5;
 
@@ -43,6 +48,23 @@ public class GtkCanvas.ItemResizer {
             }
         }
     }
+
+    /**
+    * Sets whether the resize controls on the canvas will appear or not
+    */
+    public bool enabled {
+        get {
+            return _enabled;
+        } set {
+            _enabled = value;
+            if (!value) {
+                for (int i = 0; i < 8; i++) {
+                    grabber[i].visible = false;
+                }
+            }
+        }
+    }
+    private bool _enabled = true;
 
     /**
     * Creates the widgets needed to re-size {@link GtkCanvas.CanvasItem}.
@@ -70,10 +92,12 @@ public class GtkCanvas.ItemResizer {
 
     private GtkCanvas.CanvasItem make_grabber (int id) {
         var g = create_grabber (id);
+        g.visible = false;
         canvas_actor.add (g);
 
         g.selected.connect (() => {
             selected_id = id;
+            resize_start ();
         });
 
         g.updated.connect (() => {
@@ -96,6 +120,8 @@ public class GtkCanvas.ItemResizer {
     * @param item the canvas item it will position around
     */
     public void select_item (GtkCanvas.CanvasItem item) {
+        if (!enabled) return;
+
         for (int i = 0; i < 8; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }
@@ -227,74 +253,88 @@ public class GtkCanvas.ItemResizer {
         return degrees / (180.0 / Math.PI);
     }
 
-    inline double to_degrees (double radians) {
-        return radians * (180.0 / Math.PI);
-    }
-
     /*
     * Depending on the grabbed grabber, resize the item acordingly
     *
     * To-do: Concider the rotation on the calculations. Might need to do the oposite of get_rot_x/y
     */
     private void resize (int id) {
+        float x, y;
+
+        if (item.rotation != 0) {
+            var cx = item.x + item.width / 2;
+            var cy = item.y + item.height / 2;
+
+            var radians = to_radians ((-1) * item.rotation);
+
+            var _sin = Math.sin (radians);
+            var _cos = Math.cos (radians);
+
+            x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+            y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+        } else {
+            x = grabber[id].x;
+            y = grabber[id].y;
+        }
+
         switch (id) {
             case 0:
                 item.set_rectangle (
-                    (grabber[0].x + OFFSET) / (item.ratio),
-                    (grabber[0].y + OFFSET) / (item.ratio),
-                    (item.width + (item.x - grabber[0].x - OFFSET)) / item.ratio,
-                    (item.height + (item.y - grabber[0].y - OFFSET)) / item.ratio
+                    (x + OFFSET) / (item.ratio),
+                    (y + OFFSET) / (item.ratio),
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 1:
                 item.set_rectangle (
                     null,
-                    (grabber[1].y + OFFSET) / (item.ratio),
+                    (y + OFFSET) / (item.ratio),
                     null,
-                    (item.height + (item.y - grabber[1].y - OFFSET)) / item.ratio
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 2:
                 item.set_rectangle (
                     null,
-                    (grabber[2].y + OFFSET) / (item.ratio),
-                    ((grabber[2].x - (item.x) + OFFSET) / (item.ratio)),
-                    (item.height + (item.y - grabber[2].y - OFFSET)) / item.ratio
+                    (y + OFFSET) / (item.ratio),
+                    ((x - (item.x) + OFFSET) / (item.ratio)),
+                    (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
                 break;
             case 3:
                 item.set_rectangle (
                     null,
                     null,
-                    ((grabber[3].x - (item.x) + OFFSET) / (item.ratio)),
+                    ((x - (item.x) + OFFSET) / (item.ratio)),
                     null);
                 break;
             case 4:
                 item.set_rectangle (
                     null,
                     null,
-                    ((grabber[4].x - (item.x) + OFFSET) / (item.ratio)),
-                    ((grabber[4].y - (item.y) + OFFSET) / (item.ratio)));
+                    (x - (item.x) + OFFSET) / (item.ratio),
+                    (y - (item.y) + OFFSET) / (item.ratio));
                 break;
             case 5:
                 item.set_rectangle (
                     null,
                     null,
                     null,
-                    ((grabber[5].y - (item.y) + OFFSET) / (item.ratio)));
+                    (y - item.y + OFFSET) / (item.ratio));
                 break;
             case 6:
                 item.set_rectangle (
-                    (grabber[6].x + OFFSET) / (item.ratio),
+                    (x + OFFSET) / (item.ratio),
                     null,
-                    (item.width + (item.x - grabber[6].x - OFFSET)) / item.ratio,
-                    ((grabber[6].y - (item.y) + OFFSET) / (item.ratio)));
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
+                    ((y - (item.y) + OFFSET) / (item.ratio)));
                 break;
             case 7:
                 item.set_rectangle (
-                    (grabber[7].x + OFFSET) / (item.ratio),
+                    (x + OFFSET) / (item.ratio),
                     null,
-                    (item.width + (item.x - grabber[7].x - OFFSET)) / item.ratio,
+                    (item.width + (item.x - x - OFFSET)) / item.ratio,
                     null);
                 break;
         }
