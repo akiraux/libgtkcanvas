@@ -1,4 +1,4 @@
-DEPS = --pkg clutter-1.0 --pkg gtk+-3.0 --pkg clutter-gtk-1.0
+DEPS = --pkg clutter-1.0 --pkg gtk+-3.0 --pkg clutter-gtk-1.0 --pkg cairo
 FILES = \
 	src/Window.vala\
 	src/Widgets/Canvas.vala\
