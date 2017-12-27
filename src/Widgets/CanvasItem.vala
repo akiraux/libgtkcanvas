@@ -132,11 +132,6 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     private double _rotation = 0.0;
 
     /**
-    * Fill color of the shape
-    */
-    public string color;
-
-    /**
      * Ratio relative to the container to properly scale all the elements
      */
     internal float ratio = 1.0f;
@@ -198,13 +193,5 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
         y = (real_y * ratio);
 
         updated ();
-    }
-
-    internal void apply_rotation (double rotation) {
-        if (rotation == 0.0) {
-            return;
-        }
-        var rotate = new Clutter.RotateAction ();
-        rotate.rotate (this, rotation);
     }
 }

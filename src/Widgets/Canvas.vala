@@ -33,7 +33,6 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
      */
     public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
 
-    public CanvasItem item;
     private List<CanvasItem> items;
 
     private int current_allocated_width;
@@ -127,11 +126,13 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     /**
     * Adds a test shape. Great for testing the library!
     *
-    * @param type the shape to be generated [rectangle, circle, triangle]
+    * @param type the shape to be generated [rectangle, circle]
     * @param color the color the test-shape will be, in CSS format
     * @param rotation the amount of degrees the item will be rotated
     */
     public CanvasItem add_shape (string type, string color, double rotation) {
+        CanvasItem item;
+
         switch (type) {
             case "rectangle":
                 item = new ShapeRectangle (color, rotation);

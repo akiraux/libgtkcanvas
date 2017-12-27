@@ -28,7 +28,7 @@ internal class GtkCanvas.HoverAction : Object  {
             return visible;
         } set {
             if (value && effect == null) {
-                effect = new HoverEffect (2);
+                effect = new HoverEffect (1);
                 item.add_effect (effect);
             } else if (!value && effect != null) {
                 item.remove_effect (effect);
