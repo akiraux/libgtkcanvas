@@ -20,24 +20,55 @@
 */
 
 /**
- * ShapeRectangle is a child class of the parent CanvasItem {@link Clutter.Actor} that handles move, rotate, scale, etc.
+ * ShapeRectangle is a child class of the parent CanvasItem {@link Clutter.Actor}.
  * 
  * This is a specific shape class to handle the generation of a Rectangular geometry
  */
 public class GtkCanvas.ShapeRectangle : GtkCanvas.CanvasItem {
+    /**
+    * Fill color of the shape
+    */
+    public string color {
+        get {
+            return _color;
+        } set {
+            if (value == "") return;
+
+            _color = value;
+            clutter_color = Clutter.Color.from_string (value);
+        }
+    }
+    private string _color;
+
+    public Clutter.Color? clutter_color {
+        get {
+            return _clutter_color;
+        } set {
+            if (value == null) return;
+
+            _clutter_color = value;
+        }
+    }
+    private Clutter.Color _clutter_color;
+
     public ShapeRectangle (string color, double rotation) {
         this.color = color;
         this.rotation = rotation;
 
-        background_color = Clutter.Color.from_string (color);
-        
-        real_x = 0;
-        real_y = 0;
-        
-        real_w = 100;
-        real_h = 100;
-        
-        apply_ratio (ratio);
-        apply_rotation (rotation);
+        var _canvas = new Clutter.Canvas ();
+        _canvas.set_size (100, 100);
+
+        set_rectangle (0, 0, 100, 100);
+
+        _canvas.draw.connect((ctx, w, h) => {
+            ctx.set_source_rgb (clutter_color.red, clutter_color.green, clutter_color.blue);
+            ctx.rectangle (0, 0, w, h);
+            ctx.fill ();
+
+            return true;
+        });
+
+        set_content (_canvas);
+        _canvas.invalidate (); // forces the redraw
     }
 }

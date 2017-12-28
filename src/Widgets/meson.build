@@ -2,5 +2,6 @@ subdir('Shapes')
 
 files_widgets = files([
         'Canvas.vala',
-        'CanvasItem.vala'
+        'CanvasItem.vala',
+        'ItemResizer.vala'
 ])

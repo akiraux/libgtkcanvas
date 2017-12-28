@@ -32,6 +32,10 @@ int main (string argv[]) {
     canvas.add_shape ("rectangle", "red", 30.0);
     canvas.add_shape ("circle", "green", 0.0);
 
+    canvas.clicked.connect ((modifier) => {
+        canvas.resizer.visible = false;
+    });
+
     var canvas_label = new Gtk.Label ("Canvas Properties");
     canvas_label.get_style_context ().add_class ("h4");
 
@@ -53,7 +57,7 @@ int main (string argv[]) {
 
     var new_shape = new Gtk.Button.with_label ("Add Shape");
     new_shape.clicked.connect (() => {
-        var actor = canvas.add_shape ("rectangle", "rgb(255, 198, 153)", 0.0);
+        var actor = canvas.add_shape ("rectangle", "yellow", 0.0);
 
         // Example on how you can add an animation
         actor.set_pivot_point (0.5f, 0.5f);

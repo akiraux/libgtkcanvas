@@ -33,13 +33,24 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
      */
     public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
 
-    public CanvasItem item;
+    /**
+     * Signal triggered when the canvas is clicked, but not any of the items in this
+     */
+    public signal void clicked (Clutter.ModifierType modifiers);
+
     private List<CanvasItem> items;
 
     private int current_allocated_width;
-    private double current_ratio = 1.0;
+    private float current_ratio = 1.0f;
 
     private GtkClutter.Embed stage;
+
+    /**
+    * The resizer the {@link GtkCanvas.CanvasItem}s in this canvas will use.
+    *
+    * Can be overwritten to make the items use a different style of resizer.
+    */
+    public ItemResizer resizer { get; protected set; }
 
     /**
     * This value controls the zoom level the items will use.
@@ -47,7 +58,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     *
     * Defaults to 1.0, and must be larger than 0. Currently does not do anything until scrolling gets implemented
     */
-    public double zoom_level {
+    public float zoom_level {
         get {
             return _zoom_level;
         } set {
@@ -57,7 +68,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
             update_current_ratio ();
         }
     }
-    private double _zoom_level = 1.0;
+    private float _zoom_level = 1.0f;
 
    /**
     * The "virtual" width of the canvas. This is the size in pixels that the canvas will represent.
@@ -105,6 +116,8 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         Object (width: width, height: height, obey_child: false);
     }
 
+    private bool item_clicked = false;
+
     construct {
         stage = new GtkClutter.Embed ();
         stage.set_use_layout_size (false);
@@ -112,6 +125,26 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
         var actor = stage.get_stage ();
 
         items = new List<CanvasItem>();
+        resizer = new ItemResizer (actor);
+
+        var drag_action = new Clutter.DragAction ();
+        actor.add_action (drag_action);
+
+        drag_action.drag_end.connect ((a, x, y, modifiers) => {
+            if (!item_clicked) {
+                clicked (modifiers);
+            }
+
+            item_clicked = false;
+        });
+
+        resizer.resize_start.connect (() => {
+            item_clicked = true;
+        });
+
+        item_selected.connect (() => {
+            item_clicked = true;
+        });
 
         add (stage);
     }
@@ -119,17 +152,22 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     /**
     * Adds a test shape. Great for testing the library!
     *
-    * @param type the shape to be generated [rectangle, circle, triangle]
+    * @param type the shape to be generated [rectangle, circle]
     * @param color the color the test-shape will be, in CSS format
     * @param rotation the amount of degrees the item will be rotated
     */
     public CanvasItem add_shape (string type, string color, double rotation) {
+        CanvasItem item;
+
         switch (type) {
             case "rectangle":
                 item = new ShapeRectangle (color, rotation);
             break;
             case "circle":
                 item = new ShapeCircle (color, rotation);
+            break;
+            default:
+                item = new ShapeRectangle (color, rotation);
             break;
         }
 
@@ -149,14 +187,32 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         item.selected.connect ((modifiers) => {
             item_selected (item, modifiers);
+            resizer.select_item (item);
         });
+    }
+
+    /**
+    * Removes a {@link CanvasItem} from this
+    *
+    * @param item the canvas item to be removed
+    */
+    public void remove_item (CanvasItem item) {
+        items.remove (item);
+        stage.get_stage ().remove_child (item);
+    }
+
+    /**
+    * Returns a read-only list of all the {@link GtkCanvas.CanvasItem}s on this canvas
+    */
+    public List<weak CanvasItem> get_items () {
+        return items.copy ();
     }
 
     private void update_current_ratio () {
         current_allocated_width = stage.get_allocated_width ();
         if (current_allocated_width < 0) return;
 
-        current_ratio = ((double)(current_allocated_width) / width) * zoom_level;
+        current_ratio = ((float) (current_allocated_width) / width) * zoom_level;
 
         foreach (var item in items) {
             item.apply_ratio (current_ratio);
