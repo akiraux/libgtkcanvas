@@ -9,6 +9,7 @@ It is meant to contain the basic elements such as a basic container class, move,
 - clutter-1.0
 - gtk+-3.0
 - clutter-gtk-1.0
+- granite
 
 ### To compile & run the demo
 
