@@ -135,6 +135,9 @@ public class Gcav.Canvas : Gtk.AspectFrame {
                 clicked (modifiers);
             }
 
+            actor.remove_action (drag_action);
+            actor.add_action (drag_action);
+
             item_clicked = false;
         });
 
