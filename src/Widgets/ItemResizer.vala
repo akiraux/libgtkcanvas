@@ -37,7 +37,7 @@ public class GtkCanvas.ItemResizer {
     private unowned GtkCanvas.CanvasItem? item = null;
     private bool updating = false;
 
-    private GtkCanvas.CanvasItem grabber[9];
+    private GtkCanvas.CanvasItem grabber[10];
     private int selected_id = -1;
 
     /**
@@ -45,7 +45,7 @@ public class GtkCanvas.ItemResizer {
     */
     public bool visible {
         set {
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 10; i++) {
                 grabber[i].visible = value;
             }
         }
@@ -60,7 +60,7 @@ public class GtkCanvas.ItemResizer {
         } set {
             _enabled = value;
             if (!value) {
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 10; i++) {
                     grabber[i].visible = false;
                 }
             }
@@ -76,7 +76,7 @@ public class GtkCanvas.ItemResizer {
     public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             grabber[i] = make_grabber (i);
         }
     }
@@ -91,6 +91,8 @@ public class GtkCanvas.ItemResizer {
         // TODO: Make a better shape for the grabbers
         if (id == 8) {
             return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
+        } else if (id == 9) {
+            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "white");
         } else {
             return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
         }
@@ -128,7 +130,7 @@ public class GtkCanvas.ItemResizer {
     public void select_item (GtkCanvas.CanvasItem item) {
         if (!enabled) return;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }
 
@@ -248,6 +250,16 @@ public class GtkCanvas.ItemResizer {
             grabber[8].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
         }
 
+        if (selected_id != 9) {
+            var x = item.x + item.width / 2;
+            var y = item.y + item.height / 2;
+
+            var xf = get_rot_x (x, cx, y, cy, _sin, _cos);
+            var yf = get_rot_y (x, cx, y, cy, _sin, _cos);
+
+            grabber[9].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
+        }
+
         updating = false;
     }
 
@@ -281,81 +293,125 @@ public class GtkCanvas.ItemResizer {
     private void resize (int id) {
         float x, y;
 
-        if (item.rotation != 0) {
-            var cx = item.x + item.width / 2;
-            var cy = item.y + item.height / 2;
+        var cx = item.x + item.width / 2.0f;
+        var cy = item.y + item.height / 2.0f;
 
-            var radians = to_radians ((-1) * item.rotation);
+        var radians = to_radians ((-1.0f) * item.rotation);
 
-            var _sin = Math.sin (radians);
-            var _cos = Math.cos (radians);
+        var _sin = Math.sin (radians);
+        var _cos = Math.cos (radians);
 
-            x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
-            y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
-        } else {
-            x = grabber[id].x;
-            y = grabber[id].y;
-        }
+        x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+        y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+
+        float to_match_x = 0, to_match_y = 0;
+        weak GtkCanvas.CanvasItem? to_match = null;
+        float mult_x = 1f, mult_y = 1f;
 
         switch (id) {
             case 0:
+                to_match = grabber[4];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+
                 item.set_rectangle (
                     (x + OFFSET) / (item.ratio),
                     (y + OFFSET) / (item.ratio),
                     (item.width + (item.x - x - OFFSET)) / item.ratio,
                     (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
+
                 break;
             case 1:
+                to_match = grabber[5];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                mult_y = -1f;
+
                 item.set_rectangle (
                     null,
                     (y + OFFSET) / (item.ratio),
                     null,
                     (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
+
                 break;
             case 2:
+                to_match = grabber[6];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+
                 item.set_rectangle (
                     null,
                     (y + OFFSET) / (item.ratio),
                     ((x - (item.x) + OFFSET) / (item.ratio)),
                     (item.height + (item.y - y - OFFSET)) / item.ratio
                 );
+
                 break;
-            case 3:
+            case 3: // W
+                to_match = grabber[7];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                mult_x = -1f;
+
                 item.set_rectangle (
                     null,
                     null,
                     ((x - (item.x) + OFFSET) / (item.ratio)),
                     null);
+
                 break;
             case 4:
+                to_match = grabber[0];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                mult_y = -1.0f;
+
                 item.set_rectangle (
                     null,
                     null,
                     (x - (item.x) + OFFSET) / (item.ratio),
                     (y - (item.y) + OFFSET) / (item.ratio));
+
                 break;
             case 5:
+                to_match = grabber[1];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                mult_y = -1f;
+
                 item.set_rectangle (
                     null,
                     null,
                     null,
                     (y - item.y + OFFSET) / (item.ratio));
+
                 break;
             case 6:
+                to_match = grabber[2];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+
                 item.set_rectangle (
                     (x + OFFSET) / (item.ratio),
                     null,
                     (item.width + (item.x - x - OFFSET)) / item.ratio,
                     ((y - (item.y) + OFFSET) / (item.ratio)));
+
                 break;
             case 7:
+                to_match = grabber[3];
+                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
+                mult_x = -1f;
+
                 item.set_rectangle (
                     (x + OFFSET) / (item.ratio),
                     null,
                     (item.width + (item.x - x - OFFSET)) / item.ratio,
                     null);
+
                 break;
             case 8:
                 var center_x = item.x + item.width / 2.0f;
@@ -363,6 +419,17 @@ public class GtkCanvas.ItemResizer {
 
                 item.rotation = 180f - to_deg (Math.atan2f (grabber[id].x - center_x, grabber[id].y - center_y));
                 break;
+        }
+
+        if (to_match != null) {
+            var new_x = (to_match_x - get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_x;
+            var new_y = (to_match_y - get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_y;
+
+            item.set_rectangle (
+                ((item.x) + new_x) / (item.ratio),
+                ((item.y) + new_y) / (item.ratio),
+                null,
+                null);
         }
     }
 }
