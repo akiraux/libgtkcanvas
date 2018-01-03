@@ -20,7 +20,9 @@
 */
 
 /**
- * The grabbers needed to resize a single item on the canvas
+ * The grabbers needed to resize and rotate single item on the canvas
+ *
+ * TODO: Rotation snapping to closest 5 degree
  */
 public class GtkCanvas.ItemResizer {
     /**
@@ -35,7 +37,7 @@ public class GtkCanvas.ItemResizer {
     private unowned GtkCanvas.CanvasItem? item = null;
     private bool updating = false;
 
-    private GtkCanvas.CanvasItem grabber[8];
+    private GtkCanvas.CanvasItem grabber[9];
     private int selected_id = -1;
 
     /**
@@ -43,7 +45,7 @@ public class GtkCanvas.ItemResizer {
     */
     public bool visible {
         set {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 9; i++) {
                 grabber[i].visible = value;
             }
         }
@@ -58,7 +60,7 @@ public class GtkCanvas.ItemResizer {
         } set {
             _enabled = value;
             if (!value) {
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 9; i++) {
                     grabber[i].visible = false;
                 }
             }
@@ -74,7 +76,7 @@ public class GtkCanvas.ItemResizer {
     public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             grabber[i] = make_grabber (i);
         }
     }
@@ -82,12 +84,16 @@ public class GtkCanvas.ItemResizer {
     /**
     * Override this function if you want to style the grabbers different.
     *
-    * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner
+    * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner, with 9 being the rotator
     * @return a {@link GtkCanvas.CanvasItem} or subclass of it
     */
     public virtual GtkCanvas.CanvasItem create_grabber (int id) {
         // TODO: Make a better shape for the grabbers
-        return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        if (id == 8) {
+            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
+        } else {
+            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        }
     }
 
     private GtkCanvas.CanvasItem make_grabber (int id) {
@@ -122,7 +128,7 @@ public class GtkCanvas.ItemResizer {
     public void select_item (GtkCanvas.CanvasItem item) {
         if (!enabled) return;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }
 
@@ -232,6 +238,16 @@ public class GtkCanvas.ItemResizer {
             grabber[7].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
         }
 
+        if (selected_id != 8) {
+            var x = item.x + item.width / 2;
+            var y = item.y - 48;
+
+            var xf = get_rot_x (x, cx, y, cy, _sin, _cos);
+            var yf = get_rot_y (x, cx, y, cy, _sin, _cos);
+
+            grabber[8].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
+        }
+
         updating = false;
     }
 
@@ -253,10 +269,14 @@ public class GtkCanvas.ItemResizer {
         return degrees / (180.0 / Math.PI);
     }
 
+    inline float to_deg (float rad) {
+        return rad * (180.0f / (float) Math.PI);
+    }
+
     /*
     * Depending on the grabbed grabber, resize the item acordingly
     *
-    * To-do: Concider the rotation on the calculations. Might need to do the oposite of get_rot_x/y
+    * To-do: Resizing a rotated shape gives broken results
     */
     private void resize (int id) {
         float x, y;
@@ -336,6 +356,12 @@ public class GtkCanvas.ItemResizer {
                     null,
                     (item.width + (item.x - x - OFFSET)) / item.ratio,
                     null);
+                break;
+            case 8:
+                var center_x = item.x + item.width / 2.0f;
+                var center_y = item.y + item.height / 2.0f;
+
+                item.rotation = 180f - to_deg (Math.atan2f (grabber[id].x - center_x, grabber[id].y - center_y));
                 break;
         }
     }
