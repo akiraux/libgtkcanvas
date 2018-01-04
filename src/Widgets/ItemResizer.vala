@@ -350,14 +350,15 @@ public class GtkCanvas.ItemResizer {
 
                 break;
             case 3: // W
-                to_match = grabber[7];
-                to_match_x = get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos);
-                to_match_y = get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos);
-                mult_x = -1f;
+                float new_width = (x - (item.x) + OFFSET);
+
+                float delta_w = (new_width - item.width);
+                var new_x = item.x + (delta_w * ((float) Math.cos (radians) - 1.0f) ) / 2.0f;
+                var new_y = item.y - (delta_w * ((float) Math.sin (radians))) / 2.0f;
 
                 item.set_rectangle (
-                    null,
-                    null,
+                    new_x / (item.ratio),
+                    new_y / (item.ratio),
                     ((x - (item.x) + OFFSET) / (item.ratio)),
                     null);
 
@@ -421,15 +422,15 @@ public class GtkCanvas.ItemResizer {
                 break;
         }
 
-        if (to_match != null) {
-            var new_x = (to_match_x - get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_x;
-            var new_y = (to_match_y - get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_y;
+        //  if (to_match != null) {
+        //      var new_x = (to_match_x - get_rot_x (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_x;
+        //      var new_y = (to_match_y - get_rot_y (to_match.x, cx, to_match.y, cy, _sin, _cos)) * mult_y;
 
-            item.set_rectangle (
-                ((item.x) + new_x) / (item.ratio),
-                ((item.y) + new_y) / (item.ratio),
-                null,
-                null);
-        }
+        //      item.set_rectangle (
+        //          ((item.x) + new_x) / (item.ratio),
+        //          ((item.y) + new_y) / (item.ratio),
+        //          null,
+        //          null);
+        //  }
     }
 }
