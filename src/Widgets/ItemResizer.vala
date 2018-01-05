@@ -37,7 +37,7 @@ public class GtkCanvas.ItemResizer {
     private unowned GtkCanvas.CanvasItem? item = null;
     private bool updating = false;
 
-    private GtkCanvas.CanvasItem grabber[10];
+    private GtkCanvas.CanvasItem grabber[9];
     private int selected_id = -1;
 
     /**
@@ -45,7 +45,7 @@ public class GtkCanvas.ItemResizer {
     */
     public bool visible {
         set {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 9; i++) {
                 grabber[i].visible = value;
             }
         }
@@ -60,7 +60,7 @@ public class GtkCanvas.ItemResizer {
         } set {
             _enabled = value;
             if (!value) {
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 9; i++) {
                     grabber[i].visible = false;
                 }
             }
@@ -76,7 +76,7 @@ public class GtkCanvas.ItemResizer {
     public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             grabber[i] = make_grabber (i);
         }
     }
@@ -91,8 +91,6 @@ public class GtkCanvas.ItemResizer {
         // TODO: Make a better shape for the grabbers
         if (id == 8) {
             return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
-        } else if (id == 9) {
-            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "white");
         } else {
             return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
         }
@@ -130,7 +128,7 @@ public class GtkCanvas.ItemResizer {
     public void select_item (GtkCanvas.CanvasItem item) {
         if (!enabled) return;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }
 
@@ -250,16 +248,6 @@ public class GtkCanvas.ItemResizer {
             grabber[8].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
         }
 
-        if (selected_id != 9) {
-            var x = item.x + item.width / 2;
-            var y = item.y + item.height / 2;
-
-            var xf = get_rot_x (x, cx, y, cy, _sin, _cos);
-            var yf = get_rot_y (x, cx, y, cy, _sin, _cos);
-
-            grabber[9].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
-        }
-
         updating = false;
     }
 
@@ -305,15 +293,22 @@ public class GtkCanvas.ItemResizer {
         x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
         y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
 
-        float mult_x = 1f, mult_y = 1f;
-
         switch (id) {
             case 0:
+                float new_width = (item.width + (item.x - x - OFFSET));
+                float new_height = (item.height + (item.y - y - OFFSET));
+
+                float delta_h = (new_height - item.height);
+                float delta_w = (new_width - item.width);
+
+                var new_x = (delta_w * ((float) Math.cos (radians) - 1.0f) ) / 2.0f - (delta_h * ((float) Math.sin(radians)) / 2f);
+                var new_y = (delta_w * ((float) Math.sin (radians))) / 2.0f + delta_h * ((float) Math.cos(radians) - 1) / 2f;
+
                 item.set_rectangle (
-                    (x + OFFSET) / (item.ratio),
-                    (y + OFFSET) / (item.ratio),
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    (x - new_x + OFFSET) / (item.ratio),
+                    (y - new_y + OFFSET) / (item.ratio),
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
 
                 break;
@@ -327,19 +322,29 @@ public class GtkCanvas.ItemResizer {
 
                 item.set_rectangle (
                     new_x / item.ratio,
-                    (y - new_y + OFFSET) / (item.ratio),
+                    (y - new_y + OFFSET) / item.ratio,
                     null,
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    new_height / item.ratio
                 );
 
                 break;
             case 2:
+                float new_width = x - item.x + OFFSET;
+                float new_height = item.height + (item.y - y - OFFSET);
+
+                float delta_w = (new_width - item.width);
+                float delta_h = (new_height - item.height);
+
+                var new_x = item.x + (delta_h * ((float) Math.sin(radians)) / 2) + (delta_w * ((float) Math.cos(radians) - 1) / 2);
+                var new_y = delta_h * ((float) Math.cos(radians) - 1) / 2 - delta_w * (float) Math.sin(radians) / 2;
+
                 item.set_rectangle (
-                    null,
-                    (y + OFFSET) / (item.ratio),
-                    ((x - (item.x) + OFFSET) / (item.ratio)),
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    new_x / item.ratio,
+                    (y - new_y + OFFSET) / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
+
                 break;
             case 3:
                 float new_width = (x - (item.x) + OFFSET);
@@ -355,13 +360,23 @@ public class GtkCanvas.ItemResizer {
                     new_width / item.ratio,
                     null
                 );
+
                 break;
             case 4:
+                float new_width = (x - (item.x) + OFFSET);
+                float new_height = (y - item.y + OFFSET);
+
+                float delta_w = (new_width - item.width);
+                float delta_h = (new_height - item.height);
+
+                var new_x = item.x + (delta_w * ((float) Math.cos(radians) - 1) / 2) - (delta_h * ((float) Math.sin(radians)) / 2);
+                var new_y = item.y + delta_w * (float) Math.sin(radians) / 2 + delta_h * ((float) Math.cos(radians) - 1) / 2;
+
                 item.set_rectangle (
-                    null,
-                    null,
-                    (x - (item.x) + OFFSET) / (item.ratio),
-                    (y - (item.y) + OFFSET) / (item.ratio)
+                    new_x / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
 
                 break;
@@ -370,8 +385,8 @@ public class GtkCanvas.ItemResizer {
 
                 float delta_h = (new_height - item.height);
 
-                var new_x = item.x - (delta_h * ((float) Math.sin(radians)) / 2);
-                var new_y = item.y + delta_h * ((float) Math.cos(radians) - 1) / 2;
+                var new_x = item.x - (delta_h * ((float) Math.sin(radians)) / 2f);
+                var new_y = item.y + delta_h * ((float) Math.cos(radians) - 1) / 2f;
 
                 item.set_rectangle (
                     new_x / item.ratio,
@@ -382,11 +397,20 @@ public class GtkCanvas.ItemResizer {
 
                 break;
             case 6:
+                float new_width = item.width + (item.x - x - OFFSET);
+                float new_height = y - item.y + OFFSET;
+
+                float delta_h = (new_height - item.height);
+                float delta_w = (new_width - item.width);
+
+                var new_x = (delta_h * ((float) Math.sin(radians)) / 2f) + (delta_w * ((float) Math.cos (radians) - 1.0f)) / 2.0f;
+                var new_y = item.y - (delta_w * ((float) Math.sin (radians))) / 2.0f + delta_h * ((float) Math.cos(radians) - 1) / 2f;
+
                 item.set_rectangle (
-                    (x + OFFSET) / (item.ratio),
-                    null,
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
-                    ((y - (item.y) + OFFSET) / (item.ratio))
+                    (x - new_x + OFFSET) / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
 
                 break;
@@ -394,13 +418,14 @@ public class GtkCanvas.ItemResizer {
                 float new_width = (item.width + (item.x - x - OFFSET));
 
                 float delta_w = (new_width - item.width);
+
                 var new_x = (delta_w * ((float) Math.cos (radians) - 1.0f) ) / 2.0f;
                 var new_y = item.y - (delta_w * ((float) Math.sin (radians))) / 2.0f;
 
                 item.set_rectangle (
-                    (x - new_x + OFFSET) / (item.ratio),
+                    (x - new_x + OFFSET) / item.ratio,
                     new_y / item.ratio,
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
+                    new_width / item.ratio,
                     null
                 );
 
