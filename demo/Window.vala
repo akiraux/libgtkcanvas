@@ -57,7 +57,7 @@ int main (string argv[]) {
 
     var new_shape = new Gtk.Button.with_label ("Add Shape");
     new_shape.clicked.connect (() => {
-        var actor = canvas.add_shape ("rectangle", "yellow", 0.0);
+        var actor = canvas.add_shape ("rectangle", "red", 0.0);
 
         // Example on how you can add an animation
         actor.set_pivot_point (0.5f, 0.5f);

@@ -20,7 +20,9 @@
 */
 
 /**
- * The grabbers needed to resize a single item on the canvas
+ * The grabbers needed to resize and rotate single item on the canvas
+ *
+ * TODO: Rotation snapping to closest 5 degree
  */
 public class GtkCanvas.ItemResizer {
     /**
@@ -35,7 +37,7 @@ public class GtkCanvas.ItemResizer {
     private unowned GtkCanvas.CanvasItem? item = null;
     private bool updating = false;
 
-    private GtkCanvas.CanvasItem grabber[8];
+    private GtkCanvas.CanvasItem grabber[9];
     private int selected_id = -1;
 
     /**
@@ -43,7 +45,7 @@ public class GtkCanvas.ItemResizer {
     */
     public bool visible {
         set {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 9; i++) {
                 grabber[i].visible = value;
             }
         }
@@ -58,7 +60,7 @@ public class GtkCanvas.ItemResizer {
         } set {
             _enabled = value;
             if (!value) {
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 9; i++) {
                     grabber[i].visible = false;
                 }
             }
@@ -74,7 +76,7 @@ public class GtkCanvas.ItemResizer {
     public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             grabber[i] = make_grabber (i);
         }
     }
@@ -82,12 +84,16 @@ public class GtkCanvas.ItemResizer {
     /**
     * Override this function if you want to style the grabbers different.
     *
-    * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner
+    * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner, with 9 being the rotator
     * @return a {@link GtkCanvas.CanvasItem} or subclass of it
     */
     public virtual GtkCanvas.CanvasItem create_grabber (int id) {
         // TODO: Make a better shape for the grabbers
-        return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        if (id == 8) {
+            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
+        } else {
+            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+        }
     }
 
     private GtkCanvas.CanvasItem make_grabber (int id) {
@@ -122,7 +128,7 @@ public class GtkCanvas.ItemResizer {
     public void select_item (GtkCanvas.CanvasItem item) {
         if (!enabled) return;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             canvas_actor.set_child_above_sibling (grabber[i], null);
         }
 
@@ -232,6 +238,16 @@ public class GtkCanvas.ItemResizer {
             grabber[7].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
         }
 
+        if (selected_id != 8) {
+            var x = item.x + item.width / 2;
+            var y = item.y - 48;
+
+            var xf = get_rot_x (x, cx, y, cy, _sin, _cos);
+            var yf = get_rot_y (x, cx, y, cy, _sin, _cos);
+
+            grabber[8].set_rectangle (xf - OFFSET, yf - OFFSET, null, null);
+        }
+
         updating = false;
     }
 
@@ -253,89 +269,178 @@ public class GtkCanvas.ItemResizer {
         return degrees / (180.0 / Math.PI);
     }
 
+    inline float to_deg (float rad) {
+        return rad * (180.0f / (float) Math.PI);
+    }
+
     /*
-    * Depending on the grabbed grabber, resize the item acordingly
+    * Depending on the grabbed grabber & current rotation, resize the item acordingly
     *
-    * To-do: Concider the rotation on the calculations. Might need to do the oposite of get_rot_x/y
+    * Dear future self:
+    *
+    * If you're looking at this file because the item resizing broke, consider it not fixable.
+    * Nope, don't even try it. Just rewrite it. And re-do all the maths.
     */
     private void resize (int id) {
         float x, y;
 
-        if (item.rotation != 0) {
-            var cx = item.x + item.width / 2;
-            var cy = item.y + item.height / 2;
+        var cx = item.x + item.width / 2.0f;
+        var cy = item.y + item.height / 2.0f;
 
-            var radians = to_radians ((-1) * item.rotation);
+        var rad = to_radians (-1f * item.rotation);
+        var radians = to_radians (item.rotation);
 
-            var _sin = Math.sin (radians);
-            var _cos = Math.cos (radians);
+        var _sin = (float) Math.sin (rad);
+        var _cos = (float) Math.cos (rad);
 
-            x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
-            y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
-        } else {
-            x = grabber[id].x;
-            y = grabber[id].y;
-        }
+        x = get_rot_x (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+        y = get_rot_y (grabber[id].x, cx, grabber[id].y, cy, _sin, _cos);
+
+        _sin = (float) Math.sin (radians);
+        _cos = (float) Math.cos (radians);
 
         switch (id) {
             case 0:
+                float new_width = item.width + item.x - x - OFFSET;
+                float new_height = item.height + item.y - y - OFFSET;
+
+                float delta_h = new_height - item.height;
+                float delta_w = new_width - item.width;
+
+                var new_x = (delta_w * (_cos - 1.0f)) / 2.0f - (delta_h * _sin / 2f);
+                var new_y = (delta_w * _sin / 2.0f) + delta_h * (_cos - 1) / 2f;
+
                 item.set_rectangle (
-                    (x + OFFSET) / (item.ratio),
-                    (y + OFFSET) / (item.ratio),
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    (x - new_x + OFFSET) / (item.ratio),
+                    (y - new_y + OFFSET) / (item.ratio),
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
+
                 break;
             case 1:
+                float new_height = item.height + item.y - y - OFFSET;
+
+                float delta_h = new_height - item.height;
+
+                var new_x = item.x + (delta_h * _sin / 2);
+                var new_y = delta_h * (_cos - 1) / 2;
+
                 item.set_rectangle (
+                    new_x / item.ratio,
+                    (y - new_y + OFFSET) / item.ratio,
                     null,
-                    (y + OFFSET) / (item.ratio),
-                    null,
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    new_height / item.ratio
                 );
+
                 break;
             case 2:
+                float new_width = x - item.x + OFFSET;
+                float new_height = item.height + item.y - y - OFFSET;
+
+                float delta_w = new_width - item.width;
+                float delta_h = new_height - item.height;
+
+                var new_x = item.x + (delta_h * _sin / 2) + (delta_w * (_cos - 1) / 2);
+                var new_y = delta_h * (_cos - 1) / 2 - delta_w * _sin / 2;
+
                 item.set_rectangle (
-                    null,
-                    (y + OFFSET) / (item.ratio),
-                    ((x - (item.x) + OFFSET) / (item.ratio)),
-                    (item.height + (item.y - y - OFFSET)) / item.ratio
+                    new_x / item.ratio,
+                    (y - new_y + OFFSET) / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
                 );
+
                 break;
             case 3:
+                float new_width = x - item.x + OFFSET;
+
+                float delta_w = new_width - item.width;
+
+                var new_x = item.x + (delta_w * (_cos - 1) / 2);
+                var new_y = item.y + delta_w * _sin / 2;
+
                 item.set_rectangle (
-                    null,
-                    null,
-                    ((x - (item.x) + OFFSET) / (item.ratio)),
-                    null);
+                    new_x / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    null
+                );
+
                 break;
             case 4:
+                float new_width = x - item.x + OFFSET;
+                float new_height = y - item.y + OFFSET;
+
+                float delta_w = new_width - item.width;
+                float delta_h = new_height - item.height;
+
+                var new_x = item.x + (delta_w * (_cos - 1) / 2) - (delta_h * _sin) / 2;
+                var new_y = item.y + delta_w * _sin / 2 + delta_h * (_cos - 1) / 2;
+
                 item.set_rectangle (
-                    null,
-                    null,
-                    (x - (item.x) + OFFSET) / (item.ratio),
-                    (y - (item.y) + OFFSET) / (item.ratio));
+                    new_x / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
+                );
+
                 break;
             case 5:
+                float new_height = y - item.y + OFFSET;
+
+                float delta_h = new_height - item.height;
+
+                var new_x = item.x - (delta_h * _sin / 2f);
+                var new_y = item.y + delta_h * (_cos - 1) / 2f;
+
                 item.set_rectangle (
+                    new_x / item.ratio,
+                    new_y / item.ratio,
                     null,
-                    null,
-                    null,
-                    (y - item.y + OFFSET) / (item.ratio));
+                    new_height / item.ratio
+                );
+
                 break;
             case 6:
+                float new_width = item.width + item.x - x - OFFSET;
+                float new_height = y - item.y + OFFSET;
+
+                float delta_h = new_height - item.height;
+                float delta_w = new_width - item.width;
+
+                var new_x = x - (delta_h * _sin / 2f) - (delta_w * (_cos - 1.0f)) / 2.0f + OFFSET;
+                var new_y = item.y - (delta_w * _sin) / 2.0f + delta_h * (_cos - 1f) / 2f;
+
                 item.set_rectangle (
-                    (x + OFFSET) / (item.ratio),
-                    null,
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
-                    ((y - (item.y) + OFFSET) / (item.ratio)));
+                    new_x / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    new_height / item.ratio
+                );
+
                 break;
             case 7:
+                float new_width = item.width + item.x - x - OFFSET;
+
+                float delta_w = new_width - item.width;
+
+                var new_x = x - (delta_w * (_cos - 1.0f) ) / 2.0f + OFFSET;
+                var new_y = item.y - (delta_w * _sin) / 2.0f;
+
                 item.set_rectangle (
-                    (x + OFFSET) / (item.ratio),
-                    null,
-                    (item.width + (item.x - x - OFFSET)) / item.ratio,
-                    null);
+                    new_x / item.ratio,
+                    new_y / item.ratio,
+                    new_width / item.ratio,
+                    null
+                );
+
+                break;
+            case 8:
+                var center_x = item.x + item.width / 2.0f;
+                var center_y = item.y + item.height / 2.0f;
+
+                item.rotation = 180f - to_deg (Math.atan2f (grabber[id].x - center_x, grabber[id].y - center_y));
                 break;
         }
     }
