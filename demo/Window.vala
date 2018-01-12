@@ -31,6 +31,7 @@ int main (string argv[]) {
     canvas.add_shape ("rectangle", "blue", 45.0);
     canvas.add_shape ("rectangle", "red", 30.0);
     canvas.add_shape ("circle", "green", 0.0);
+    canvas.add_shape ("svg", "blue", 0.0);
 
     canvas.clicked.connect ((modifier) => {
         canvas.resizer.visible = false;

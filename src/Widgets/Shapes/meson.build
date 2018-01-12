@@ -1,4 +1,5 @@
 files_shapes = files([
         'ShapeRectangle.vala',
-        'ShapeCircle.vala'
+        'ShapeCircle.vala',
+        'ShapeSVG.vala'
 ])

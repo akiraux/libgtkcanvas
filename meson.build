@@ -14,6 +14,7 @@ deps = ([dependency('gtk+-3.0', version:'>=3.18'),
         dependency('clutter-gtk-1.0', version:'>=1.6'),
         dependency('granite', version:'>=0.3'),
         dependency('cairo', version:'>=1.14'),
+        dependency('gsvgtk-0.6', version:'>=0.5.0'),
         m_dep
 ])
 

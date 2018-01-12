@@ -21,6 +21,7 @@ if valadoc.found()
 				'--pkg=granite',
 				'--pkg=clutter-1.0',
 				'--pkg=clutter-gtk-1.0',
+				'--pkg=gsvgtk-0.6',
 				'--directory=@OUTDIR@',
 				valasources],
 			install : true,
