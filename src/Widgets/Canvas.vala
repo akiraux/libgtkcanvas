@@ -20,25 +20,25 @@
 */
 
 /**
- * This is a widget that holds and renders {@link GtkCanvas.CanvasItem} and their subclasses
+ * This is a widget that holds and renders {@link GtkCanvas.Item} and their subclasses
  *
- * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's CanvasItems when the canvas is resized.
+ * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's Items when the canvas is resized.
  */
 public class GtkCanvas.Canvas : Gtk.AspectFrame {
     /**
-     * Signal triggered when a {@link GtkCanvas.CanvasItem} on this canvas is selected by the user.
+     * Signal triggered when a {@link GtkCanvas.Item} on this canvas is selected by the user.
      *
      * @param item The canvas item which triggered the event.
      * @param modifiers A mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked.
      */
-    public signal void item_selected (CanvasItem item, Clutter.ModifierType modifiers);
+    public signal void item_selected (Item item, Clutter.ModifierType modifiers);
 
     /**
      * Signal triggered when the canvas is clicked, but not any of the items in this
      */
     public signal void clicked (Clutter.ModifierType modifiers);
 
-    private List<CanvasItem> items;
+    private List<Item> items;
 
     private int current_allocated_width;
     private float current_ratio = 1.0f;
@@ -46,7 +46,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private GtkClutter.Embed stage;
 
     /**
-    * The resizer the {@link GtkCanvas.CanvasItem}s in this canvas will use.
+    * The resizer the {@link GtkCanvas.Item}s in this canvas will use.
     *
     * Can be overwritten to make the items use a different style of resizer.
     */
@@ -124,7 +124,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
 
         var actor = stage.get_stage ();
 
-        items = new List<CanvasItem>();
+        items = new List<Item>();
         resizer = new ItemResizer (actor);
 
         var drag_action = new Clutter.DragAction ();
@@ -156,8 +156,8 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     * @param color the color the test-shape will be, in CSS format
     * @param rotation the amount of degrees the item will be rotated
     */
-    public CanvasItem add_shape (string type, string color, double rotation) {
-        CanvasItem item;
+    public Item add_shape (string type, string color, double rotation) {
+        Item item;
 
         switch (type) {
             case "rectangle":
@@ -179,11 +179,11 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     }
 
     /**
-    * Adds a {@link CanvasItem} to this
+    * Adds a {@link Item} to this
     *
     * @param item the canvas item to be added
     */
-    public void add_item (CanvasItem item) {
+    public void add_item (Item item) {
         items.prepend (item);
         stage.get_stage ().add_child (item);
         item.apply_ratio (current_ratio);
@@ -195,19 +195,19 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     }
 
     /**
-    * Removes a {@link CanvasItem} from this
+    * Removes a {@link Item} from this
     *
     * @param item the canvas item to be removed
     */
-    public void remove_item (CanvasItem item) {
+    public void remove_item (Item item) {
         items.remove (item);
         stage.get_stage ().remove_child (item);
     }
 
     /**
-    * Returns a read-only list of all the {@link GtkCanvas.CanvasItem}s on this canvas
+    * Returns a read-only list of all the {@link GtkCanvas.Item}s on this canvas
     */
-    public List<weak CanvasItem> get_items () {
+    public List<weak Item> get_items () {
         return items.copy ();
     }
 

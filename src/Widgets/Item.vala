@@ -108,17 +108,17 @@ public interface GtkCanvas.Item : Clutter.Actor {
             real_h = h;
         }
 
-        apply_ratio (this, ratio);
+        apply_ratio (ratio);
     }
 
-    internal static void apply_ratio (Item item, float ratio) {
-        item.ratio = ratio;
+    internal void apply_ratio (float ratio) {
+        this.ratio = ratio;
 
-        item.width =  (float) (item.real_w  * ratio);
-        item.height = (float) (item.real_h * ratio);
-        item.x = (float) (item.real_x * ratio);
-        item.y = (float) (item.real_y * ratio);
+        width =  (float) (real_w  * ratio);
+        height = (float) (real_h * ratio);
+        x = (float) (real_x * ratio);
+        y = (float) (real_y * ratio);
 
-        item.updated ();
+        updated ();
     }
 }
