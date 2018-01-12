@@ -20,15 +20,15 @@
 */
 
 /**
- * Manages and controls a CanvasItem's movement.
+ * Manages and controls a Item's movement.
  */
 internal class GtkCanvas.MoveAction : Clutter.DragAction {
     private int x_offset_press = 0;
     private int y_offset_press = 0;
 
-    private unowned CanvasItem item;
+    private unowned Item item;
 
-    public MoveAction (CanvasItem item) {
+    public MoveAction (Item item) {
         this.item = item;
 
         drag_begin.connect (on_move_begin);
