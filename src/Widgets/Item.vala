@@ -87,7 +87,7 @@ public interface GtkCanvas.Item : Clutter.Actor {
     /**
      * The item's ratio to scale size
      */
-    public abstract double ratio { get; set; }
+    public abstract float ratio { get; set; }
     /**
     * Set's the coordenates and size of this, ignoring nulls. Use this to set multiple "real_n" properties without causing uneeded updates.
     */
@@ -111,7 +111,7 @@ public interface GtkCanvas.Item : Clutter.Actor {
         apply_ratio (this, ratio);
     }
 
-    internal static void apply_ratio (Item item, double ratio) {
+    internal static void apply_ratio (Item item, float ratio) {
         item.ratio = ratio;
 
         item.width =  (float) (item.real_w  * ratio);

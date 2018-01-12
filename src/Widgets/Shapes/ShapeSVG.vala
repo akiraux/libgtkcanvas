@@ -47,11 +47,13 @@ public class GtkCanvas.ShapeSVG : GtkCanvas.CanvasItem {
         set_rectangle (0, 0, 100, 100);
 
         _canvas.draw.connect((ctx, w, h) => {
-            if (svg == null) set_svg_string (default_image);
-            var rsvg = new Rsvg.Handle ();
-            rsvg.write (svg.write_string ().data);
-            rsvg.close ();
-            rsvg.render_cairo (ctx);
+            try {
+              if (svg == null) set_svg_string (default_image);
+              var rsvg = new Rsvg.Handle ();
+              rsvg.write (svg.write_string ().data);
+              rsvg.close ();
+              rsvg.render_cairo (ctx);
+            } catch (GLib.Error e) { warning ("Error: %s".printf (e.message)); }
             return true;
         });
 
