@@ -26,7 +26,7 @@
  */
 using GSvg;
 using Rsvg;
-public class GtkCanvas.GSVGtkShapeImage : GSVGtk.ContentImage, GtkCanvas.Item {
+public class GtkCanvas.GSVGtkShapeImage : GSVGtk.ActorImage, GtkCanvas.Item {
     private MoveAction move_action;
     private HoverAction hover_action;
 
