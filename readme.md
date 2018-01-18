@@ -10,6 +10,10 @@ It is meant to contain the basic elements such as a basic container class, move,
 - gtk+-3.0
 - clutter-gtk-1.0
 - granite
+- librsvg-2.0
+- gsvgtk-0.6
+- gsvg-0.4
+- gxml-0.16
 
 ### To compile & run the demo
 
