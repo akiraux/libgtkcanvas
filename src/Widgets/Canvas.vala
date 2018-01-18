@@ -167,7 +167,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
                 item = new ShapeCircle (color, rotation);
             break;
             case "svg":
-                item = new GSVGtkShapeImage ();
+                item = new GSvgtkShapeImage ();
             break;
             default:
                 item = new ShapeRectangle (color, rotation);

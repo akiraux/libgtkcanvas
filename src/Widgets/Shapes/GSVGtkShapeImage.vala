@@ -26,7 +26,7 @@
  */
 using GSvg;
 using Rsvg;
-public class GtkCanvas.GSVGtkShapeImage : GSVGtk.ActorImage, GtkCanvas.Item {
+public class GtkCanvas.GSvgtkShapeImage : GSvgtk.ActorImage, GtkCanvas.Item {
     private MoveAction move_action;
     private HoverAction hover_action;
 
@@ -121,12 +121,12 @@ public class GtkCanvas.GSVGtkShapeImage : GSVGtk.ActorImage, GtkCanvas.Item {
         });
     }
 
-    public GSVGtkShapeImage.with_values (float x, float y, float w, float h, string color) {
+    public GSvgtkShapeImage.with_values (float x, float y, float w, float h, string color) {
         Object (background_color: Clutter.Color.from_string (color));
         set_rectangle (x, y, w, h);
     }
 
-    public GSVGtkShapeImage () {
+    public GSvgtkShapeImage () {
         set_rectangle (0, 0, 100, 100);
     }
 }
