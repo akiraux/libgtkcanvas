@@ -41,6 +41,11 @@ inc_libh = include_directories ('.')
 inc_libh_dep = declare_dependency (include_directories : inc_libh)
 ldir = meson.current_source_dir()
 
+if svgdep.found()
+	deps += svgdep
+endif
+
+
 # LT_VERSION for ABI related changes
 # From: https://autotools.io/libtool/version.html
 # This rules applies to Meson 0.43
