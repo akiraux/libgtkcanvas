@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>GCanva</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="0%" x2="0%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#EEEEEE" offset="0%"></stop>
+            <stop stop-color="#D7D7D7" offset="100%"></stop>
+        </linearGradient>
+        <path d="M64.0530973,14 L111,14 C113.209139,14 115,15.790861 115,18 L115,110.106195 C115,112.315334 113.209139,114.106195 111,114.106195 L64.0530973,114.106195 C36.409535,114.106195 14,91.6966597 14,64.0530973 C14,36.409535 36.409535,14 64.0530973,14 Z" id="path-2"></path>
+        <filter x="-5.9%" y="-6.0%" width="111.9%" height="112.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.197661911 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <pattern id="pattern-4" width="14.9999991" height="14.9999991" x="-0.999999106" y="-0.999999106" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-5" transform="scale(0.299999982,0.299999982)"></use>
+        </pattern>
+        <image id="image-5" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEDWlDQ1BJQ0MgUHJvZmlsZQAAOI2NVV1oHFUUPrtzZyMkzlNsNIV0qD8NJQ2TVjShtLp/3d02bpZJNtoi6GT27s6Yyc44M7v9oU9FUHwx6psUxL+3gCAo9Q/bPrQvlQol2tQgKD60+INQ6Ium65k7M5lpurHeZe58853vnnvuuWfvBei5qliWkRQBFpquLRcy4nOHj4g9K5CEh6AXBqFXUR0rXalMAjZPC3e1W99Dwntf2dXd/p+tt0YdFSBxH2Kz5qgLiI8B8KdVy3YBevqRHz/qWh72Yui3MUDEL3q44WPXw3M+fo1pZuQs4tOIBVVTaoiXEI/MxfhGDPsxsNZfoE1q66ro5aJim3XdoLFw72H+n23BaIXzbcOnz5mfPoTvYVz7KzUl5+FRxEuqkp9G/Ajia219thzg25abkRE/BpDc3pqvphHvRFys2weqvp+krbWKIX7nhDbzLOItiM8358pTwdirqpPFnMF2xLc1WvLyOwTAibpbmvHHcvttU57y5+XqNZrLe3lE/Pq8eUj2fXKfOe3pfOjzhJYtB/yll5SDFcSDiH+hRkH25+L+sdxKEAMZahrlSX8ukqMOWy/jXW2m6M9LDBc31B9LFuv6gVKg/0Szi3KAr1kGq1GMjU/aLbnq6/lRxc4XfJ98hTargX++DbMJBSiYMIe9Ck1YAxFkKEAG3xbYaKmDDgYyFK0UGYpfoWYXG+fAPPI6tJnNwb7ClP7IyF+D+bjOtCpkhz6CFrIa/I6sFtNl8auFXGMTP34sNwI/JhkgEtmDz14ySfaRcTIBInmKPE32kxyyE2Tv+thKbEVePDfW/byMM1Kmm0XdObS7oGD/MypMXFPXrCwOtoYjyyn7BV29/MZfsVzpLDdRtuIZnbpXzvlf+ev8MvYr/Gqk4H/kV/G3csdazLuyTMPsbFhzd1UabQbjFvDRmcWJxR3zcfHkVw9GfpbJmeev9F08WW8uDkaslwX6avlWGU6NRKz0g/SHtCy9J30o/ca9zX3Kfc19zn3BXQKRO8ud477hLnAfc1/G9mrzGlrfexZ5GLdn6ZZrrEohI2wVHhZywjbhUWEy8icMCGNCUdiBlq3r+xafL549HQ5jH+an+1y+LlYBifuxAvRN/lVVVOlwlCkdVm9NOL5BE4wkQ2SMlDZU97hX86EilU/lUmkQUztTE6mx1EEPh7OmdqBtAvv8HdWpbrJS6tJj3n0CWdM6busNzRV3S9KTYhqvNiqWmuroiKgYhshMjmhTh9ptWhsF7970j/SbMrsPE1suR5z7DMC+P/Hs+y7ijrQAlhyAgccjbhjPygfeBTjzhNqy28EdkUh8C+DU9+z2v/oyeH791OncxHOs5y2AtTc7nb/f73TWPkD/qwBnjX8BoJ98VVBg/m8AAADKSURBVGgF7ZgxCsQwDATjvMb/f41/k1QGF9oikWBBzDU5lpwUzejAZFwfPnPOZ9++1hr7e+X1b4+78iGctRjEST/qjZGIijPDiJN+1BsjERVn1sbIOI8ETqLZ3m2MtBnk0wn2XENOv9k/g/h9m9ViEGHYFmPEhl40xogAY4sxYkMvGmNEgLHFGLGhF40xIsDYYozY0IvGGBFgbHEbI7ygs+2QaNxntcSAYcwLuhBLbdhmtRikdjHy1TCSZ1hbASO1PPPVMJJnWFvhBRthG07MMgb9AAAAAElFTkSuQmCC"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="GCanva">
+            <path d="M64,8 L117,8 C119.209139,8 121,9.790861 121,12 L121,116 C121,118.209139 119.209139,120 117,120 L64,120 C33.072054,120 8,94.927946 8,64 C8,33.072054 33.072054,8 64,8 Z" id="Combined-Shape" fill="url(#linearGradient-1)"></path>
+            <g id="Combined-Shape-Copy">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="#FAFAFA" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <use fill-opacity="0.08" fill="url(#pattern-4)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+            <circle id="Oval" stroke="#F5515F" stroke-width="4" cx="96" cy="32" r="7"></circle>
+            <path d="M65.7251684,61 L112.87223,61 C114.655267,61 115.30184,61.1856512 115.953691,61.5342654 C116.605543,61.8828796 117.11712,62.3944567 117.465735,63.0463086 C117.814349,63.6981604 118,64.3447329 118,66.1277704 L118,113.274832 C118,115.483971 116.209139,117.274832 114,117.274832 C112.939134,117.274832 111.921718,116.853404 111.171573,116.103259 L62.8967413,67.8284271 C61.3346441,66.26633 61.3346441,63.73367 62.8967413,62.1715729 C63.6468868,61.4214274 64.6643024,61 65.7251684,61 Z" id="Rectangle-5" fill="#F5515F"></path>
+            <path d="M89.0694775,32.0541992 C78.909567,32.0541992 69.4772282,32.0541992 60.7724609,32.0541992 C51.4238281,32.0541992 31.3994141,39.6746826 31.3994141,64 C31.3994141,92.2159424 53.1376953,96.980957 60.7724609,96.980957 C69.7379557,96.980957 81.570638,96.980957 96.2705078,96.980957" id="Path-2" stroke="#F5515F" stroke-width="4"></path>
+            <rect id="Rectangle-2" stroke="#FFFFFF" stroke-width="4" transform="translate(98.000000, 81.000000) rotate(-45.000000) translate(-98.000000, -81.000000) " x="92" y="75" width="12" height="12"></rect>
+            <path d="M65.7251684,61 L112.87223,61 C114.655267,61 115.30184,61.1856512 115.953691,61.5342654 C116.605543,61.8828796 117.11712,62.3944567 117.465735,63.0463086 C117.814349,63.6981604 118,64.3447329 118,66.1277704 L118,113.274832 C118,115.483971 116.209139,117.274832 114,117.274832 C112.939134,117.274832 111.921718,116.853404 111.171573,116.103259 L62.8967413,67.8284271 C61.3346441,66.26633 61.3346441,63.73367 62.8967413,62.1715729 C63.6468868,61.4214274 64.6643024,61 65.7251684,61 Z" id="Rectangle-5"></path>
+            <path d="M104.414214,77.8391916 L101.585786,75.0107645 L115.339005,61.264328 C116.060674,61.5038198 116.646133,61.905604 117.095383,62.4696808 C117.544632,63.0337575 117.81277,63.6631724 117.899796,64.3579254 L104.414214,77.8391916 Z" id="Path-3" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>
