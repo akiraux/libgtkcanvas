@@ -24,7 +24,7 @@
  * 
  * This is a specific shape class to handle the generation of a Rectangular geometry
  */
-public class GtkCanvas.ShapeRectangle : GtkCanvas.CanvasItem {
+public class Gcav.ShapeRectangle : Gcav.CanvasItem {
     /**
     * Fill color of the shape
     */

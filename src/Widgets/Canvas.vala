@@ -20,13 +20,13 @@
 */
 
 /**
- * This is a widget that holds and renders {@link GtkCanvas.Item} and their subclasses
+ * This is a widget that holds and renders {@link Gcav.Item} and their subclasses
  *
  * This class should take care of zoom-in/out, and maintaing the aspect ratio of this and it's Items when the canvas is resized.
  */
-public class GtkCanvas.Canvas : Gtk.AspectFrame {
+public class Gcav.Canvas : Gtk.AspectFrame {
     /**
-     * Signal triggered when a {@link GtkCanvas.Item} on this canvas is selected by the user.
+     * Signal triggered when a {@link Gcav.Item} on this canvas is selected by the user.
      *
      * @param item The canvas item which triggered the event.
      * @param modifiers A mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked.
@@ -46,7 +46,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private GtkClutter.Embed stage;
 
     /**
-    * The resizer the {@link GtkCanvas.Item}s in this canvas will use.
+    * The resizer the {@link Gcav.Item}s in this canvas will use.
     *
     * Can be overwritten to make the items use a different style of resizer.
     */
@@ -107,7 +107,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     private int _height = 100;
 
     /**
-    * Creates a new {@link GtkCanvas.Canvas}.
+    * Creates a new {@link Gcav.Canvas}.
     *
     * @param width the width in px the canvas will represent
     * @param height the height in px the canvas will represent
@@ -207,7 +207,7 @@ public class GtkCanvas.Canvas : Gtk.AspectFrame {
     }
 
     /**
-    * Returns a read-only list of all the {@link GtkCanvas.Item}s on this canvas
+    * Returns a read-only list of all the {@link Gcav.Item}s on this canvas
     */
     public List<weak Item> get_items () {
         return items.copy ();

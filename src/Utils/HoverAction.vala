@@ -19,7 +19,7 @@
 * Authored by: Alessandro Castellani <castellani.ale@gmail.com>
 */
 
-internal class GtkCanvas.HoverAction : Object  {
+internal class Gcav.HoverAction : Object  {
     /**
      * Toggle the visibility of the HoverEffect()
      */

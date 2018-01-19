@@ -26,7 +26,7 @@
  */
 using GSvg;
 using Rsvg;
-public class GtkCanvas.ShapeSVG : GtkCanvas.CanvasItem {
+public class Gcav.ShapeSVG : Gcav.CanvasItem {
     private string default_image = """<?xml version="1.0"?>
   <svg xmlns:svg="http://www.w3.org/2000/svg" width="998" height="298">
    <g font-family="Verdana" font-size="45">

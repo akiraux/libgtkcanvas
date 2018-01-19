@@ -23,11 +23,11 @@ int main (string argv[]) {
     GtkClutter.init (ref argv);
 
     var window = new Gtk.Window ();
-    window.title = "GtkCanvas Demo";
+    window.title = "GtkCanvas (Gcav) Demo";
 
     window.resize (1000, 800);
 
-    var canvas = new GtkCanvas.Canvas (600, 400);
+    var canvas = new Gcav.Canvas (600, 400);
     canvas.add_shape ("rectangle", "blue", 45.0);
     canvas.add_shape ("rectangle", "red", 30.0);
     canvas.add_shape ("circle", "green", 0.0);

@@ -20,8 +20,8 @@ conf.set('PROJECT_VERSION', PROJECT_VERSION)
 conf.set('CAMEL_CASE_NAME', CAMEL_CASE_NAME)
 conf.set('API_VERSION', API_VERSION)
 
-configure_file(input : 'gtkcanvas.deps.in',
-	output : 'gtkcanvas-@0@.deps'.format(API_VERSION),
+configure_file(input : 'gcav.deps.in',
+	output : 'gcav-@0@.deps'.format(API_VERSION),
 	configuration : conf,
 	install : true,
 	install_dir : vapidir)

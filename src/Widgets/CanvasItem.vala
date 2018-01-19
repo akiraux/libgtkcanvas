@@ -25,7 +25,7 @@
  * This class should take care of the basics such as dragging, clicks and rotation,
  * and leave more specific implementations to child classes.
  */
-public class GtkCanvas.CanvasItem : Clutter.Actor, GtkCanvas.Item {
+public class Gcav.CanvasItem : Clutter.Actor, Gcav.Item {
 
     private MoveAction move_action;
     private HoverAction hover_action;

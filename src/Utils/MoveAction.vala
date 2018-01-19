@@ -22,7 +22,7 @@
 /**
  * Manages and controls a Item's movement.
  */
-internal class GtkCanvas.MoveAction : Clutter.DragAction {
+internal class Gcav.MoveAction : Clutter.DragAction {
     private int x_offset_press = 0;
     private int y_offset_press = 0;
 

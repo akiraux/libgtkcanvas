@@ -26,7 +26,7 @@
  * This class should take care of the basics such as dragging, clicks and rotation,
  * and leave more specific implementations to child classes.
  */
-public interface GtkCanvas.Item : Clutter.Actor {
+public interface Gcav.Item : Clutter.Actor {
     /**
      * Signal triggered when this is selected by the user.
      *
