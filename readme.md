@@ -1,4 +1,5 @@
-# libgtkcanvas
+![GCanva](assets/GCanva.svg)
+# GCanvas
 
 This is the shared canvas specially built for [Akira](https://github.com/Alecaddd/Akira) and [Spice-Up](https://github.com/Philip-Scott/Spice-up). It will be written in Vala and use clutter for the drawing.
 
