@@ -2,10 +2,10 @@ files_demo=([
         'Window.vala'
 ])
 
-args = '--vapidir='+ldir
+args = ['--vapidir='+ldir]
 
 if svgdep.found()
-	args+=', --define=GSVGTK'
+	args+= ['--define=GSVGTK']
 endif
 
 executable ('gtkcanvas-demo',

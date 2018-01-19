@@ -41,8 +41,11 @@ inc_libh = include_directories ('.')
 inc_libh_dep = declare_dependency (include_directories : inc_libh)
 ldir = meson.current_source_dir()
 
+svg_args = []
 if svgdep.found()
 	deps += svgdep
+
+	svg_args+= ['--define=GSVGTK']
 endif
 
 
@@ -65,6 +68,7 @@ lib = library(VERSIONED_PROJECT_NAME,
 	vala_header : PROJECT_NAME+'.h',
 	vala_vapi : VAPI_NAME,
 	vala_gir : GIR_NAME,
+	vala_args: svg_args,
 	dependencies : [namespaceinfo_dep, deps],
 	install : true,
 	install_dir : [
