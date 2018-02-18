@@ -20,8 +20,8 @@ conf.set('PROJECT_VERSION', PROJECT_VERSION)
 conf.set('CAMEL_CASE_NAME', CAMEL_CASE_NAME)
 conf.set('API_VERSION', API_VERSION)
 
-configure_file(input : 'gtkcanvas.deps.in',
-	output : 'gtkcanvas-@0@.deps'.format(API_VERSION),
+configure_file(input : 'gcav.deps.in',
+	output : 'gcav-@0@.deps'.format(API_VERSION),
 	configuration : conf,
 	install : true,
 	install_dir : vapidir)
@@ -40,6 +40,14 @@ configure_file(output : 'config.h',
 inc_libh = include_directories ('.')
 inc_libh_dep = declare_dependency (include_directories : inc_libh)
 ldir = meson.current_source_dir()
+
+svg_args = []
+if svgdep.found()
+	deps += svgdep
+
+	svg_args+= ['--define=GSVGTK']
+endif
+
 
 # LT_VERSION for ABI related changes
 # From: https://autotools.io/libtool/version.html
@@ -60,6 +68,7 @@ lib = library(VERSIONED_PROJECT_NAME,
 	vala_header : PROJECT_NAME+'.h',
 	vala_vapi : VAPI_NAME,
 	vala_gir : GIR_NAME,
+	vala_args: svg_args,
 	dependencies : [namespaceinfo_dep, deps],
 	install : true,
 	install_dir : [

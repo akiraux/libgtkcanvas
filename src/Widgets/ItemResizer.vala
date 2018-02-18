@@ -24,7 +24,7 @@
  *
  * TODO: Rotation snapping to closest 5 degree
  */
-public class GtkCanvas.ItemResizer {
+public class Gcav.ItemResizer {
     /**
      * Signal triggered when a resize is starting
      */
@@ -34,10 +34,10 @@ public class GtkCanvas.ItemResizer {
     private const float OFFSET = 5;
 
     private unowned Clutter.Actor canvas_actor;
-    private unowned GtkCanvas.CanvasItem? item = null;
+    private unowned Gcav.Item? item = null;
     private bool updating = false;
 
-    private GtkCanvas.CanvasItem grabber[9];
+    private Gcav.Item grabber[9];
     private int selected_id = -1;
 
     /**
@@ -69,9 +69,9 @@ public class GtkCanvas.ItemResizer {
     private bool _enabled = true;
 
     /**
-    * Creates the widgets needed to re-size {@link GtkCanvas.CanvasItem}.
+    * Creates the widgets needed to re-size {@link Gcav.Item}.
     *
-    * @param actor The actor from a {@link GtkCanvas.Canvas}.
+    * @param actor The actor from a {@link Gcav.Canvas}.
     */
     public ItemResizer (Clutter.Actor actor) {
         canvas_actor = actor;
@@ -85,18 +85,18 @@ public class GtkCanvas.ItemResizer {
     * Override this function if you want to style the grabbers different.
     *
     * @param id the ID of the item we're requesting. From 0 - 8, clockwize starting at the top left corner, with 9 being the rotator
-    * @return a {@link GtkCanvas.CanvasItem} or subclass of it
+    * @return a {@link Gcav.Item} or subclass of it
     */
-    public virtual GtkCanvas.CanvasItem create_grabber (int id) {
+    public virtual Gcav.Item create_grabber (int id) {
         // TODO: Make a better shape for the grabbers
         if (id == 8) {
-            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
+            return new Gcav.CanvasItem.with_values (0, 0, SIZE, SIZE, "blue");
         } else {
-            return new GtkCanvas.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
+            return new Gcav.CanvasItem.with_values (0, 0, SIZE, SIZE, "black");
         }
     }
 
-    private GtkCanvas.CanvasItem make_grabber (int id) {
+    private Gcav.Item make_grabber (int id) {
         var g = create_grabber (id);
         g.visible = false;
         canvas_actor.add (g);
@@ -121,11 +121,11 @@ public class GtkCanvas.ItemResizer {
     }
 
     /**
-    * Positions the resize grabbers around a {@link GtkCanvas.CanvasItem}
+    * Positions the resize grabbers around a {@link Gcav.Item}
     *
     * @param item the canvas item it will position around
     */
-    public void select_item (GtkCanvas.CanvasItem item) {
+    public void select_item (Gcav.Item item) {
         if (!enabled) return;
 
         for (int i = 0; i < 9; i++) {

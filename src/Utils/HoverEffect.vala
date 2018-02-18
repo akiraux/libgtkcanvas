@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-internal class HoverEffect : Clutter.Effect {
+internal class Gcav.HoverEffect : Clutter.Effect {
     public int border_size { get; construct; }
     public float scale_factor { get; set; default = 1; }
 

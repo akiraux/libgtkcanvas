@@ -1,3 +1,13 @@
+pkgs = [
+	'--pkg=gtk+-3.0',
+	'--pkg=granite',
+	'--pkg=clutter-1.0',
+	'--pkg=clutter-gtk-1.0'
+]
+if svgdep.found ()
+	pkgs += ['--pkg=gsvgtk-0.6']
+endif
+
 valadoc = find_program ('valadoc', required: false)
 if valadoc.found()
 	outdir = CAMEL_CASE_NAME+'-'+API_VERSION
@@ -17,10 +27,7 @@ if valadoc.found()
 				'--force',
 				pkgname,
 				pkgversion,
-				'--pkg=gtk+-3.0',
-				'--pkg=granite',
-				'--pkg=clutter-1.0',
-				'--pkg=clutter-gtk-1.0',
+				pkgs,
 				'--directory=@OUTDIR@',
 				valasources],
 			install : true,

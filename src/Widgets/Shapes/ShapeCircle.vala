@@ -24,7 +24,7 @@
  *
  * This is a specific shape class to handle the generation of a Circle geometry
  */
-public class GtkCanvas.ShapeCircle : GtkCanvas.CanvasItem {
+public class Gcav.ShapeCircle : Gcav.CanvasItem {
     /**
     * Fill color of the shape
     */

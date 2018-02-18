@@ -1,10 +1,10 @@
 project('gtkcanvas', [ 'vala', 'c'], version : '0.1.0')
 
-PROJECT_NAME = meson.project_name()
+PROJECT_NAME = 'gcav'
 API_VERSION = '0.4'
 PROJECT_VERSION = meson.project_version()
 VERSIONED_PROJECT_NAME = PROJECT_NAME+'-'+API_VERSION
-CAMEL_CASE_NAME = 'GtkCanvas'
+CAMEL_CASE_NAME = 'Gcav'
 VERSIONED_CAMEL_CASE_NAME = CAMEL_CASE_NAME +'-'+ API_VERSION
 
 cc = meson.get_compiler('c')
@@ -16,6 +16,8 @@ deps = ([dependency('gtk+-3.0', version:'>=3.18'),
         dependency('cairo', version:'>=1.14'),
         m_dep
 ])
+
+svgdep = dependency('gsvgtk-0.6', version:'>=0.5.0', required: false)
 
 
 inc_rooth = include_directories ('.')

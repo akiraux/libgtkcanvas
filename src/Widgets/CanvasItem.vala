@@ -25,23 +25,7 @@
  * This class should take care of the basics such as dragging, clicks and rotation,
  * and leave more specific implementations to child classes.
  */
-public class GtkCanvas.CanvasItem : Clutter.Actor {
-    /**
-     * Signal triggered when this is selected by the user.
-     *
-     * @param modifiers this is a mask that contains all the modifiers for the event such as if Shift/Ctrl were pressed, or which button on the mouse was clicked
-     */
-    public signal void selected (Clutter.ModifierType modifiers);
-
-    /**
-     * Signal triggered when the rectangle of this changes
-     */
-    public signal void updated ();
-
-    /**
-     * Triggered after a move operation, when the mouse button is lifted
-     */
-    public signal void on_move_end ();
+public class Gcav.CanvasItem : Clutter.Actor, Gcav.Item {
 
     private MoveAction move_action;
     private HoverAction hover_action;
@@ -151,7 +135,7 @@ public class GtkCanvas.CanvasItem : Clutter.Actor {
     /**
      * Ratio relative to the container to properly scale all the elements
      */
-    internal float ratio = 1.0f;
+    public float ratio { get; set; default = 1.0f; }
 
     public CanvasItem.with_values (float x, float y, float w, float h, string color) {
         Object (background_color: Clutter.Color.from_string (color));

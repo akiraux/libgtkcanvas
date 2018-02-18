@@ -12,6 +12,13 @@ It is meant to contain the basic elements such as a basic container class, move,
 - clutter-gtk-1.0
 - granite
 
+#### For SVG support
+
+- gsvgtk-0.6
+- librsvg-2.0
+- gsvg-0.4
+- gxml-0.16
+
 ### To compile & run the demo
 
 #### Meson Build

@@ -19,7 +19,7 @@
 * Authored by: Alessandro Castellani <castellani.ale@gmail.com>
 */
 
-internal class GtkCanvas.HoverAction : Object  {
+internal class Gcav.HoverAction : Object  {
     /**
      * Toggle the visibility of the HoverEffect()
      */
@@ -42,9 +42,9 @@ internal class GtkCanvas.HoverAction : Object  {
     bool visible = false;
 
     /**
-     * Parent CanvasItem passed on mouse enter
+     * Parent Item passed on mouse enter
      */
-    private unowned CanvasItem item;
+    private unowned Item item;
 
     /**
      * HoverEffect (int border_width ) 
@@ -53,9 +53,9 @@ internal class GtkCanvas.HoverAction : Object  {
 
     /**
      * Initialize Class
-     * @param CanvasItem item [hovered item from canvas]
+     * @param Item item [hovered item from canvas]
      */
-    public HoverAction (CanvasItem item) {
+    public HoverAction (Item item) {
         this.item = item;
     }
 
