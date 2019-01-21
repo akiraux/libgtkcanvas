@@ -28,12 +28,6 @@ int main (string argv[]) {
     window.resize (1000, 800);
 
     var canvas = new Gcav.Canvas (600, 400);
-    canvas.add_shape ("rectangle", "blue", 45.0);
-    canvas.add_shape ("rectangle", "red", 30.0);
-    canvas.add_shape ("circle", "green", 0.0);
-#if GSVGTK
-    canvas.add_shape ("svg", "blue", 0.0);
-#endif
 
     canvas.clicked.connect ((modifier) => {
         canvas.resizer.visible = false;
@@ -58,7 +52,23 @@ int main (string argv[]) {
     testing_grid.orientation = Gtk.Orientation.VERTICAL;
     testing_grid.row_spacing = 6;
 
-    var new_shape = new Gtk.Button.with_label ("Add Shape");
+    var new_circle = new Gtk.Button.with_label ("Add Circle");
+    new_circle.clicked.connect (() => {
+        var actor = canvas.add_shape ("circle", "green", 0.0);
+
+        // Example on how you can add an animation
+        actor.set_pivot_point (0.5f, 0.5f);
+        actor.set_scale (0.01f, 0.01f);
+        actor.opacity = 0;
+
+        actor.save_easing_state ();
+        actor.set_easing_mode (Clutter.AnimationMode.EASE_OUT_EXPO);
+        actor.set_easing_duration (200);
+        actor.set_scale (1.0f, 1.0f);
+        actor.opacity = 255U;
+        actor.restore_easing_state ();
+    });
+    var new_shape = new Gtk.Button.with_label ("Add Rectangle");
     new_shape.clicked.connect (() => {
         var actor = canvas.add_shape ("rectangle", "red", 0.0);
 
@@ -75,10 +85,48 @@ int main (string argv[]) {
         actor.restore_easing_state ();
     });
 
+    var new_svg = new Gtk.Button.with_label ("Add SVG");
+    new_svg.clicked.connect (() => {
+        Gtk.FileChooserDialog chooser = new Gtk.FileChooserDialog (
+            "Select a SVG file", window, Gtk.FileChooserAction.OPEN,
+            "_Cancel",
+            Gtk.ResponseType.CANCEL,
+            "_Open",
+            Gtk.ResponseType.ACCEPT);
+        chooser.set_select_multiple (false);
+        var filter = new Gtk.FileFilter();
+        filter.add_pattern("*.svg");
+        filter.set_filter_name("SVG files");
+        chooser.add_filter(filter);
+        chooser.run ();
+        chooser.close ();
+
+        if (chooser.get_file () != null) {
+          string contents;
+          var file_choosed = chooser.get_file();
+          GLib.FileUtils.get_contents(file_choosed.get_path(), out contents, null);
+          var actor = canvas.add_shape ("svg", "red", 0.0);
+          (actor as GSvgtk.ActorClutter).set_svg_string(contents);
+          // Example on how you can add an animation
+          actor.set_pivot_point (0.5f, 0.5f);
+          actor.set_scale (0.01f, 0.01f);
+          actor.opacity = 0;
+
+          actor.save_easing_state ();
+          actor.set_easing_mode (Clutter.AnimationMode.EASE_OUT_EXPO);
+          actor.set_easing_duration (200);
+          actor.set_scale (1.0f, 1.0f);
+          actor.opacity = 255U;
+          actor.restore_easing_state ();
+        }
+
+    });
     testing_grid.add (canvas_label);
     testing_grid.add (width);
     testing_grid.add (height);
     testing_grid.add (new_shape);
+    testing_grid.add (new_circle);
+    testing_grid.add (new_svg);
 
     var main_grid = new Gtk.Grid ();
     main_grid.margin = 6;
