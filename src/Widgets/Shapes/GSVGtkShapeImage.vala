@@ -26,7 +26,7 @@
  */
 using GSvg;
 using Rsvg;
-public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImage, Gcav.Item {
+public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImageClutter, Gcav.Item {
     private MoveAction move_action;
     private HoverAction hover_action;
 

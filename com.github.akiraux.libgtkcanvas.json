@@ -18,16 +18,73 @@
    "finish-args": [
       "--share=ipc",
       "--socket=wayland",
-      "--socket=x11"
+      "--socket=x11",
+      "--device=dri"
    ],
    "modules": [
+      {
+         "name": "gxml",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.gnome.org/GNOME/gxml.git",
+               "branch": "gxml-0.16"
+            }
+         ]
+      },
+      {
+         "name": "gsvg",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/pwmc/gsvg.git",
+               "tag": "0.6"
+            }
+         ]
+      },
+      {
+         "name": "gresg",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/esodan/gresg.git",
+               "tag": "0.4.0"
+            }
+         ]
+      },
+      {
+         "name": "gtktester",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/esodan/gtktester",
+               "commit": "6514a150cf065a070151937a965da713ca5007"
+            }
+         ]
+      },
+      {
+         "name": "gsvgtk",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/albfan/gsvgtk",
+               "branch": "rendering-svg"
+            }
+         ]
+      },
       {
          "name": "libgtkcanvas",
          "buildsystem": "meson",
          "sources": [
             {
                "type": "git",
-               "url": "https://github.com/akiraux/libgtkcanvas"
+               "url": "https://github.com/albfan/libgtkcanvas",
+               "branch": "wip/albfan/action-buttons"
             }
          ]
       }

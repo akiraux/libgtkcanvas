@@ -5,7 +5,7 @@ pkgs = [
 	'--pkg=clutter-gtk-1.0'
 ]
 if svgdep.found ()
-	pkgs += ['--pkg=gsvgtk-0.6']
+	pkgs += ['--pkg=gsvgtk-0.8']
 endif
 
 valadoc = find_program ('valadoc', required: false)
