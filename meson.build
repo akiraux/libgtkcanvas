@@ -17,7 +17,7 @@ deps = ([dependency('gtk+-3.0', version:'>=3.18'),
         m_dep
 ])
 
-svgdep = dependency('gsvgtk-0.6', version:'>=0.5.0', required: false)
+svgdep = dependency('gsvgtk-0.6', version:'>=0.6.3', required: false)
 
 
 inc_rooth = include_directories ('.')
