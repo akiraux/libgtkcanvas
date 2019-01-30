@@ -102,11 +102,9 @@ int main (string argv[]) {
         chooser.close ();
 
         if (chooser.get_file () != null) {
-          string contents;
           var file_choosed = chooser.get_file();
-          GLib.FileUtils.get_contents(file_choosed.get_path(), out contents, null);
           var actor = canvas.add_shape ("svg", "red", 0.0);
-          (actor as GSvgtk.ActorClutter).set_svg_string(contents);
+          (actor as GSvgtk.ActorClutter).set_svg(file_choosed);
           // Example on how you can add an animation
           actor.set_pivot_point (0.5f, 0.5f);
           actor.set_scale (0.01f, 0.01f);
