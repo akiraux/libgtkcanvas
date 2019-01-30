@@ -127,6 +127,6 @@ public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImageClutter, Gcav.Item {
     }
 
     public GSvgtkShapeImage () {
-        set_rectangle (0, 0, 100, 100);
+        set_rectangle (0, 0, 300, 300);
     }
 }
