@@ -1,0 +1,36 @@
+{
+   "app-id": "com.github.philip-scott.libgtkcanvas",
+   "runtime": "org.gnome.Platform",
+   "runtime-version": "3.30",
+   "sdk": "org.gnome.Sdk",
+   "base":"io.elementary.BaseApp",
+   "base-version": "juno",
+   "command": "gtkcanvas-demo",
+   "cleanup": [
+      "/include",
+      "/lib/pkgconfig",
+      "/lib/debug",
+      "/share/vala",
+      "/man",
+      "*.a",
+      "*.la"
+   ],
+   "finish-args": [
+      "--share=ipc",
+      "--socket=wayland",
+      "--share=network"
+   ],
+   "modules": [
+      {
+         "name": "libgtkcanvas",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://github.com/albfan/libgtkcanvas",
+               "branch": "flatpak"
+            }
+         ]
+      }
+   ]
+}
