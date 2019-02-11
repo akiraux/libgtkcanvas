@@ -13,4 +13,4 @@ executable ('gtkcanvas-demo',
         vala_args: args,
 	dependencies : [ deps, inc_libh_dep ],
         link_with: lib,
-        install: false)
+        install: true)
