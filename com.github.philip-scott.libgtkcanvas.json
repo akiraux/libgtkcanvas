@@ -1,0 +1,88 @@
+{
+   "app-id": "com.github.philip-scott.libgtkcanvas",
+   "runtime": "org.gnome.Platform",
+   "runtime-version": "3.30",
+   "sdk": "org.gnome.Sdk",
+   "base":"io.elementary.BaseApp",
+   "base-version": "juno",
+   "command": "gtkcanvas-demo",
+   "cleanup": [
+      "/include",
+      "/lib/pkgconfig",
+      "/lib/debug",
+      "/share/vala",
+      "/man",
+      "*.a",
+      "*.la"
+   ],
+   "finish-args": [
+      "--share=ipc",
+      "--socket=wayland",
+      "--share=network"
+   ],
+   "modules": [
+      {
+         "name": "gxml",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.gnome.org/GNOME/gxml.git",
+               "branch": "gxml-0.16"
+            }
+         ]
+      },
+      {
+         "name": "gsvg",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/pwmc/gsvg.git"
+            }
+         ]
+      },
+      {
+         "name": "gresg",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/esodan/gresg.git"
+            }
+         ]
+      },
+      {
+         "name": "gtktester",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/esodan/gtktester"
+            }
+         ]
+      },
+      {
+         "name": "gsvgtk",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://gitlab.com/albfan/gsvgtk",
+               "branch": "wip/albfan/set-svg-string"
+            }
+         ]
+      },
+      {
+         "name": "libgtkcanvas",
+         "buildsystem": "meson",
+         "sources": [
+            {
+               "type": "git",
+               "url": "https://github.com/albfan/libgtkcanvas",
+               "branch": "wip/albfan/action-buttons"
+            }
+         ]
+      }
+   ]
+}
