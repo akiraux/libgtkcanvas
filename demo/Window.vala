@@ -65,7 +65,7 @@ int main (string[] argv) {
     var window = new Gtk.Window ();
     window.title = "GtkCanvas (Gcav) Demo";
 
-    window.resize (1000, 800);
+    window.resize (800, 400);
 
     var canvas = new Gcav.Canvas (600, 400);
 
