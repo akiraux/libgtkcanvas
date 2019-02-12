@@ -19,7 +19,64 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
+Gee.ArrayList<string> valid_nodes;
+Gtk.TreeStore tree_store;
+Gtk.TreeView tree_view;
+GSvg.GsDocument svg;
+GSvgtk.ActorClutter actorSVG;
+
+void show_attribute(GXml.DomElement element, string attr_name, Gtk.TreeIter? parentIter) {
+  Gtk.TreeIter childIter;
+  var value = element.get_attribute(attr_name);
+  if (value != null) {
+  //if (element.has_attribute(attr_name)) { //TODO: This should work
+    tree_store.append (out childIter, parentIter);
+    tree_store.set (childIter, 0, attr_name, 1, value, 2, element, -1);
+  }
+}
+
+void list_childs(GXml.DomNode node, Gtk.TreeIter? parentIter) {
+
+  foreach (GXml.DomNode child in node.child_nodes) {
+    Gtk.TreeIter? childIter = parentIter;
+    if (child.node_type == GXml.DomNode.NodeType.ELEMENT_NODE && valid_nodes.contains(child.node_name)) {
+      tree_store.append (out childIter, parentIter);
+      tree_store.set (childIter, 0, child.node_name, -1);
+
+      var element = child as GXml.DomElement;
+      Gtk.TreeIter attrIter;
+      tree_store.append (out attrIter, childIter);
+      tree_store.set (attrIter, 0, "attributes", -1);
+      show_attribute(element, "id", attrIter);
+      show_attribute(element, "d", attrIter);
+      show_attribute(element, "style", attrIter);
+      show_attribute(element, "fill", attrIter);
+      show_attribute(element, "stroke", attrIter);
+      show_attribute(element, "transform", attrIter);
+      show_attribute(element, "cx", attrIter);
+      show_attribute(element, "cy", attrIter);
+      show_attribute(element, "r", attrIter);
+      show_attribute(element, "x", attrIter);
+      show_attribute(element, "y", attrIter);
+      show_attribute(element, "width", attrIter);
+      show_attribute(element, "height", attrIter);
+      //foreach (var entry in attributes.entries) { //TODO: this should work
+      //  show_attribute(element, entry.key, attrIter);
+      //}
+      GXml.DomNamedNodeMap attributes = element.attributes;
+    }
+    list_childs(child, childIter);
+  }
+}
+
 int main (string argv[]) {
+    valid_nodes = new Gee.ArrayList<string>();
+    valid_nodes.add("g");
+    valid_nodes.add("path");
+    valid_nodes.add("circle");
+    valid_nodes.add("rect");
+    valid_nodes.add("polygon");
+
     GtkClutter.init (ref argv);
 
     var window = new Gtk.Window ();
@@ -28,6 +85,8 @@ int main (string argv[]) {
     window.resize (1000, 800);
 
     var canvas = new Gcav.Canvas (600, 400);
+
+    canvas.set_size_request(600, 400);
 
     canvas.clicked.connect ((modifier) => {
         canvas.resizer.visible = false;
@@ -103,21 +162,27 @@ int main (string argv[]) {
 
         if (chooser.get_file () != null) {
           var file_choosed = chooser.get_file();
-          var actor = canvas.add_shape ("svg", "red", 0.0);
-          (actor as GSvgtk.ActorClutter).set_svg(file_choosed);
-          // Example on how you can add an animation
-          actor.set_pivot_point (0.5f, 0.5f);
-          actor.set_scale (0.01f, 0.01f);
-          actor.opacity = 0;
+          try {
+            svg = new GSvg.GsDocument ();
+            svg.read_from_file (file_choosed);
+            list_childs(svg, null);
+            tree_view.expand_all();
+            actorSVG = canvas.add_shape ("svg", "red", 0.0) as GSvgtk.ActorClutter;
+            actorSVG.set_svg_string(svg.write_string());
+            // Example on how you can add an animation
+            actorSVG.set_pivot_point (0.5f, 0.5f);
+            actorSVG.set_scale (0.01f, 0.01f);
+            actorSVG.opacity = 0;
 
-          actor.save_easing_state ();
-          actor.set_easing_mode (Clutter.AnimationMode.EASE_OUT_EXPO);
-          actor.set_easing_duration (200);
-          actor.set_scale (1.0f, 1.0f);
-          actor.opacity = 255U;
-          actor.restore_easing_state ();
+            actorSVG.save_easing_state ();
+            actorSVG.set_easing_mode (Clutter.AnimationMode.EASE_OUT_EXPO);
+            actorSVG.set_easing_duration (200);
+            actorSVG.set_scale (1.0f, 1.0f);
+            actorSVG.opacity = 255U;
+            actorSVG.restore_easing_state ();
+          } catch( Error e) {
+          }
         }
-
     });
     testing_grid.add (canvas_label);
     testing_grid.add (width);
@@ -125,19 +190,42 @@ int main (string argv[]) {
     testing_grid.add (new_shape);
     testing_grid.add (new_circle);
     testing_grid.add (new_svg);
+    tree_view = new Gtk.TreeView();
+    tree_view.expand = true;
+    tree_store = new Gtk.TreeStore(3, typeof(string), typeof(string), typeof(GXml.DomElement));
+    tree_view.set_model(tree_store);
+    tree_view.insert_column_with_attributes(-1, "Type", new Gtk.CellRendererText(), "text", 0, null);
+    var renderer = new Gtk.CellRendererText();
+    renderer.editable = true;
+    renderer.edited.connect ((path, new_text) => {
+      Gtk.TreeIter iter;
+      if (tree_store.get_iter_from_string (out iter, path)) {
+         Value value;
+         tree_store.get_value(iter, 2, out value);
+         GXml.DomElement element = value.get_object() as GXml.DomElement;
+         tree_store.get_value(iter, 0, out value);
+         var attr_name = value.get_string();
+         try {
+           element.set_attribute(attr_name, new_text);
+         } catch (Error e) {
+         }
+         tree_store.set_value(iter, 1, new_text);
 
-    var main_grid = new Gtk.Grid ();
-    main_grid.margin = 6;
-    main_grid.column_spacing = 6;
-    main_grid.orientation = Gtk.Orientation.HORIZONTAL;
+         actorSVG.set_svg_string(svg.write_string());
+      }
+    });
+    tree_view.insert_column_with_attributes(-1, "Name", renderer, "text", 1, null);
+    var scroll = new Gtk.ScrolledWindow (null, null);
+    scroll.set_policy (Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+    scroll.add (tree_view);
+    testing_grid.add (scroll);
 
-    var separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
+    var paned = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 
-    main_grid.add (canvas);
-    main_grid.add (separator);
-    main_grid.add (testing_grid);
+    paned.add1(canvas);
+    paned.add2(testing_grid);
 
-    window.add (main_grid);
+    window.add (paned);
 
     window.destroy.connect (Gtk.main_quit);
     window.show_all ();
