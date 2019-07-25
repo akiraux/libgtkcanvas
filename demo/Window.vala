@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-int main (string argv[]) {
+int main (string[] argv) {
     GtkClutter.init (ref argv);
 
     var window = new Gtk.Window ();
