@@ -26,7 +26,7 @@
  */
 using GSvg;
 using Rsvg;
-public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImage, Gcav.Item {
+public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImageClutter, Gcav.Item {
     private MoveAction move_action;
     private HoverAction hover_action;
 
@@ -127,6 +127,6 @@ public class Gcav.GSvgtkShapeImage : GSvgtk.ActorImage, Gcav.Item {
     }
 
     public GSvgtkShapeImage () {
-        set_rectangle (0, 0, 100, 100);
+        set_rectangle (0, 0, 300, 300);
     }
 }

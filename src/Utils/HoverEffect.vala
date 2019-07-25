@@ -35,7 +35,7 @@ internal class Gcav.HoverEffect : Clutter.Effect {
 
     public override void paint (Clutter.EffectPaintFlags flags)    {
         var bounding_box = get_bounding_box ();
-        var color = Cogl.Color.from_4ub (65, 201, 253, 255);
+        var color = Cogl.Color.from_4ub (65, 201, 253, 55);
 
         material.set_color (color);
 

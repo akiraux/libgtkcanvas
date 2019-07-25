@@ -14,7 +14,7 @@ It is meant to contain the basic elements such as a basic container class, move,
 
 #### For SVG support
 
-- gsvgtk-0.6
+- gsvgtk-0.8
 - librsvg-2.0
 - gsvg-0.4
 - gxml-0.16
